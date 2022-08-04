@@ -1,15 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">about</string>
-
     <string name="title_topic">주제</string>
-    <string name="title_topic_add">주제등록</string>
-    <string name="title_think_add">생각등록</string>
-
     <string name="text_date_prefix">생각</string>
     <string name="text_date_suffix">일 째</string>
-
     <string name="menu_title_add">add</string>
     <string name="menu_title_close">close</string>
+    <string name="title_topic_add">주제등록</string>
     <string name="dialog_btn_save">등록</string>
     <string name="dialog_btn_cancel">취소</string>
     <string name="title_app_name">About</string>

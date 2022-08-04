@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- add Dialog style -->
+    <style name="dialog_basic_style" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+
+        <!-- 배경 dim 설정 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 0.0 (투명) ~ 1.0 (검정색) -->
+        <item name="android:backgroundDimAmount">0.5</item>
+    </style>
+
+</resources>
