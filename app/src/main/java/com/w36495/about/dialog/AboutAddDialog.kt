@@ -18,14 +18,13 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.w36495.about.R
 import com.w36495.about.data.Think
 import com.w36495.about.data.Topic
-import com.w36495.about.listener.ThinkItemClickListener
-import com.w36495.about.listener.TopicItemClickListener
+import com.w36495.about.listener.DialogClickListener
 import com.w36495.about.util.currentDateFormat
 
 class AboutAddDialog(
     val dialogTag: String,
     private val size: Point,
-    val topicItemClickListener: TopicItemClickListener
+    val dialogClickListener: DialogClickListener
 ) :
     DialogFragment(), View.OnClickListener {
 
@@ -99,10 +98,20 @@ class AboutAddDialog(
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.dialog_add_btn_save -> {
-                selectedColor?.let { color ->
-                    val topic =
-                        Topic(0L, inputText.text.toString(), 12, color, currentDateFormat())
-                    topicItemClickListener.onTopicSaveClicked(topic)
+                if (dialogTag == "topic") {
+                    selectedColor?.let { color ->
+                        val topic =
+                            Topic(0L, inputText.text.toString(), 12, color, currentDateFormat())
+                        dialogClickListener.onTopicSaveClicked(topic)
+                    }
+                } else if (dialogTag == "think") {
+                    val think = Think(
+                        0L,
+                        inputText.text.toString(),
+                        currentDateFormat(),
+                        currentDateFormat()
+                    )
+                    dialogClickListener.onThinkSaveClicked(think)
                 }
                 dismiss()
             }

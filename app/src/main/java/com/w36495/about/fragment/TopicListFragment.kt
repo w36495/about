@@ -16,11 +16,12 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.w36495.about.listener.TopicListClickListener
 import com.w36495.about.R
 import com.w36495.about.adapter.TopicListAdapter
+import com.w36495.about.data.Think
 import com.w36495.about.data.Topic
 import com.w36495.about.dialog.AboutAddDialog
-import com.w36495.about.listener.TopicItemClickListener
+import com.w36495.about.listener.DialogClickListener
 
-class TopicListFragment : Fragment(), TopicListClickListener, TopicItemClickListener {
+class TopicListFragment : Fragment(), TopicListClickListener, DialogClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var topicListAdapter: TopicListAdapter
@@ -78,4 +79,6 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicItemClickList
     override fun onTopicSaveClicked(topic: Topic) {
         topicListAdapter.appTopicList(topic)
     }
+
+    override fun onThinkSaveClicked(think: Think) { }
 }
