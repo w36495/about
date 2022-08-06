@@ -12,39 +12,29 @@
         android:paddingBottom="10dp">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/dialog_add_toolbar"
+            android:id="@+id/dialog_think_add_toolbar"
             android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/dialog_top_close_menu"
-            app:title="@string/title_topic_add"
+            app:title="@string/title_think_add"
             app:titleCentered="true" />
 
-        <Button
-            android:id="@+id/dialog_add_btn_color"
-            android:layout_width="24dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="24dp"
-            app:layout_constraintEnd_toStartOf="@id/dialog_add_input"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dialog_add_toolbar" />
-
         <EditText
-            android:id="@+id/dialog_add_input"
+            android:id="@+id/dialog_think_add_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginHorizontal="30dp"
             android:layout_marginTop="24dp"
-            android:layout_marginEnd="30dp"
+            android:maxLines="5"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/dialog_add_btn_color"
-            app:layout_constraintTop_toBottomOf="@id/dialog_add_toolbar" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dialog_think_add_toolbar" />
 
         <Button
-            android:id="@+id/dialog_add_btn_cancel"
+            android:id="@+id/dialog_think_add_btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -53,10 +43,10 @@
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dialog_add_input" />
+            app:layout_constraintTop_toBottomOf="@id/dialog_think_add_input" />
 
         <Button
-            android:id="@+id/dialog_add_btn_save"
+            android:id="@+id/dialog_think_add_btn_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
@@ -64,8 +54,7 @@
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/dialog_add_btn_cancel" />
-
+            app:layout_constraintTop_toTopOf="@id/dialog_think_add_btn_cancel" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

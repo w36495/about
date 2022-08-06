@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,15 +15,13 @@ import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.google.android.material.appbar.MaterialToolbar
 import com.w36495.about.R
-import com.w36495.about.data.Think
 import com.w36495.about.data.Topic
-import com.w36495.about.listener.DialogClickListener
+import com.w36495.about.listener.TopicDialogClickListener
 import com.w36495.about.util.currentDateFormat
 
-class AboutAddDialog(
-    val dialogTag: String,
+class TopicAddDialog(
     private val size: Point,
-    val dialogClickListener: DialogClickListener
+    private val topicDialogClickListener: TopicDialogClickListener
 ) :
     DialogFragment(), View.OnClickListener {
 
@@ -34,8 +31,7 @@ class AboutAddDialog(
     private lateinit var inputText: EditText
     private lateinit var colorSelectButton: Button
 
-    private val inputTextMaxLength = 10
-    private var selectedColor: String? = null
+    private var selectedColor: String = "#DCDCDC"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,27 +39,17 @@ class AboutAddDialog(
         savedInstanceState: Bundle?
     ): View? {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        return inflater.inflate(R.layout.dialog_add, container, false)
+        return inflater.inflate(R.layout.dialog_topic_add, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        dialogToolbar = view.findViewById(R.id.dialog_add_toolbar)
-        cancelButton = view.findViewById(R.id.dialog_add_btn_cancel)
-        saveButton = view.findViewById(R.id.dialog_add_btn_save)
-        inputText = view.findViewById(R.id.dialog_add_input)
-        colorSelectButton = view.findViewById(R.id.dialog_add_btn_color)
-
-        if (dialogTag == "think") {
-            dialogToolbar.title = "생각등록"
-            inputText.maxLines = 5
-            colorSelectButton.visibility = View.INVISIBLE
-        } else if (dialogTag == "topic") {
-            val inputFilter = InputFilter.LengthFilter(inputTextMaxLength)
-            inputText.filters = arrayOf(inputFilter)
-            inputText.maxLines = 1
-        }
+        dialogToolbar = view.findViewById(R.id.dialog_topic_add_toolbar)
+        cancelButton = view.findViewById(R.id.dialog_topic_add_btn_cancel)
+        saveButton = view.findViewById(R.id.dialog_topic_add_btn_save)
+        inputText = view.findViewById(R.id.dialog_topic_add_input)
+        colorSelectButton = view.findViewById(R.id.dialog_topic_add_btn_color)
 
         cancelButton.setOnClickListener(this)
         saveButton.setOnClickListener(this)
@@ -97,34 +83,23 @@ class AboutAddDialog(
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.dialog_add_btn_save -> {
-                if (dialogTag == "topic") {
-                    selectedColor?.let { color ->
-                        val topic =
-                            Topic(0L, inputText.text.toString(), 12, color, currentDateFormat())
-                        dialogClickListener.onTopicSaveClicked(topic)
-                    }
-                } else if (dialogTag == "think") {
-                    val think = Think(
-                        0L,
-                        inputText.text.toString(),
-                        currentDateFormat(),
-                        currentDateFormat()
-                    )
-                    dialogClickListener.onThinkSaveClicked(think)
-                }
+            R.id.dialog_topic_add_btn_save -> {
+                val topic =
+                    Topic(0L, inputText.text.toString(), 12, selectedColor, currentDateFormat())
+                topicDialogClickListener.onTopicSaveClicked(topic)
                 dismiss()
             }
 
-            R.id.dialog_add_btn_cancel -> {
+            R.id.dialog_topic_add_btn_cancel -> {
                 dismiss()
             }
 
-            R.id.dialog_add_btn_color -> {
+            R.id.dialog_topic_add_btn_color -> {
                 ColorPickerDialog
                     .Builder(view.context)
                     .setTitle("Pick Theme")
                     .setColorShape(ColorShape.SQAURE)
+                    .setDefaultColor(selectedColor)
                     .setColorListener { _, colorHex ->
                         colorSelectButton.setBackgroundColor(Color.parseColor(colorHex))
                         selectedColor = colorHex

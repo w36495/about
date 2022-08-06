@@ -17,10 +17,10 @@ import com.w36495.about.R
 import com.w36495.about.adapter.ThinkListAdapter
 import com.w36495.about.data.Think
 import com.w36495.about.data.Topic
-import com.w36495.about.dialog.AboutAddDialog
-import com.w36495.about.listener.DialogClickListener
+import com.w36495.about.dialog.ThinkAddDialog
+import com.w36495.about.listener.ThinkDialogClickListener
 
-class ThinkListFragment(val topic: Topic) : Fragment(), DialogClickListener {
+class ThinkListFragment(val topic: Topic) : Fragment(), ThinkDialogClickListener {
 
     private lateinit var toolbar: MaterialToolbar
     private lateinit var recyclerView: RecyclerView
@@ -62,7 +62,7 @@ class ThinkListFragment(val topic: Topic) : Fragment(), DialogClickListener {
         toolbar.setOnMenuItemClickListener { menu ->
             when (menu.itemId) {
                 R.id.main_add -> {
-                    AboutAddDialog("think", size, dialogClickListener = this).show(
+                    ThinkAddDialog(size, this).show(
                         parentFragmentManager, "think"
                     )
                     true
@@ -75,8 +75,6 @@ class ThinkListFragment(val topic: Topic) : Fragment(), DialogClickListener {
             parentFragmentManager.popBackStack()
         }
     }
-
-    override fun onTopicSaveClicked(topic: Topic) { }
 
     override fun onThinkSaveClicked(think: Think) {
         thinkListAdapter.addThink(think)
