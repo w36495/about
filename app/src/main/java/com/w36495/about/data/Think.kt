@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "thinks")
 data class Think(
-    val topicId: Long,
+    var topicId: Long,
     val text: String,
     val registDate: String,
     val updateDate: String
