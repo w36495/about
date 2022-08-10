@@ -47,7 +47,7 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickLi
         toolbar = view.findViewById(R.id.topic_list_toolbar)
 
         topicListAdapter = TopicListAdapter()
-        topicListAdapter.setListClickListener(this)
+        topicListAdapter.setClickListener(this)
 
         recyclerView.adapter = topicListAdapter
         recyclerView.layoutManager = GridLayoutManager(view.context, 2)
