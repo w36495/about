@@ -12,6 +12,7 @@ import com.w36495.about.data.Topic
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun topicDao(): TopicDao
+    abstract fun thinkDao(): ThinkDao
 
     companion object {
         private var instance: AppDatabase? = null
