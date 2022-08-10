@@ -13,6 +13,9 @@ interface TopicDao{
     @Query("SELECT * FROM topics WHERE id = :topicId")
     fun getTopicById(topicId: Long): Topic
 
+    @Query("SELECT topic FROM topics WHERE id = :topicId")
+    fun getTopicTitleById(topicId: Long): String
+
     @Insert
     fun insertTopic(topic: Topic)
 
