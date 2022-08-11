@@ -19,8 +19,12 @@ import com.w36495.about.data.Think
 import com.w36495.about.data.Topic
 import com.w36495.about.dialog.ThinkAddDialog
 import com.w36495.about.listener.ThinkDialogClickListener
+import com.w36495.about.listener.ThinkSwipeListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class ThinkListFragment(val topic: Topic) : Fragment(), ThinkDialogClickListener {
+class ThinkListFragment(private val topicId: Long) : Fragment(), ThinkDialogClickListener, ThinkSwipeListener {
 
     private lateinit var toolbar: MaterialToolbar
     private lateinit var recyclerView: RecyclerView
@@ -45,6 +49,7 @@ class ThinkListFragment(val topic: Topic) : Fragment(), ThinkDialogClickListener
         recyclerView = view.findViewById(R.id.think_list_recyclerview)
 
         thinkListAdapter = ThinkListAdapter()
+        thinkListAdapter.setClickListener(this)
 
         itemSwipeHelper = ItemSwipeHelper(thinkListAdapter)
         val itemTouchHelper = ItemTouchHelper(itemSwipeHelper)

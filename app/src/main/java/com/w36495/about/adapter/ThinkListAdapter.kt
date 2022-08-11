@@ -8,11 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.w36495.about.R
 import com.w36495.about.data.Think
 import com.w36495.about.listener.ItemSwipeListener
+import com.w36495.about.listener.ThinkSwipeListener
 
 class ThinkListAdapter : RecyclerView.Adapter<ThinkListAdapter.ThinkListViewHolder>(),
     ItemSwipeListener {
 
     private var thinkList = arrayListOf<Think>()
+    private lateinit var thinkSwipeListener: ThinkSwipeListener
 
     class ThinkListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val number: TextView
@@ -36,6 +38,10 @@ class ThinkListAdapter : RecyclerView.Adapter<ThinkListAdapter.ThinkListViewHold
     }
 
     override fun getItemCount(): Int = thinkList.size
+
+    fun setClickListener(thinkSwipeListener: ThinkSwipeListener) {
+        this.thinkSwipeListener = thinkSwipeListener
+    }
 
     fun addThink(think: Think) {
         thinkList.add(think)
