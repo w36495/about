@@ -85,7 +85,7 @@ class TopicAddDialog(
         when (view?.id) {
             R.id.dialog_topic_add_btn_save -> {
                 val topic =
-                    Topic(0L, inputText.text.toString(), 12, selectedColor, currentDateFormat())
+                    Topic(inputText.text.toString(), selectedColor, currentDateFormat())
                 topicDialogClickListener.onTopicSaveClicked(topic)
                 dismiss()
             }
