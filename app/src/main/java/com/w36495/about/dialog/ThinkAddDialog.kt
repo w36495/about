@@ -28,6 +28,8 @@ class ThinkAddDialog(
     private lateinit var saveButton: Button
     private lateinit var inputText: EditText
 
+    private final val TMP_TOPIC_ID: Long = 999999
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
