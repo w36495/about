@@ -49,7 +49,11 @@ class ThinkListAdapter : RecyclerView.Adapter<ThinkListAdapter.ThinkListViewHold
     }
 
     override fun onItemSwiped(position: Int) {
-        thinkList.removeAt(position)
+        thinkSwipeListener.onThinkSwiped(thinkList[position].id)
+    }
+
+    fun setThinkList(thinkList: List<Think>) {
+        this.thinkList = thinkList as ArrayList<Think>
         notifyDataSetChanged()
     }
 }
