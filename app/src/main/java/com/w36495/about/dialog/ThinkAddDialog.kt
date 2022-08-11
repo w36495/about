@@ -80,7 +80,7 @@ class ThinkAddDialog(
         when (view?.id) {
             R.id.dialog_think_add_btn_save -> {
                 val think = Think(
-                    0L,
+                    TMP_TOPIC_ID,
                     inputText.text.toString(),
                     currentDateFormat(),
                     currentDateFormat()
