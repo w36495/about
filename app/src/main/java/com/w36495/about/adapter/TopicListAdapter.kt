@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.w36495.about.listener.TopicListClickListener
@@ -47,20 +46,18 @@ class TopicListAdapter : RecyclerView.Adapter<TopicListAdapter.TopicListViewHold
         holder.count.setBackgroundColor(Color.parseColor(topicList[position].color))
 
         holder.cardView.setOnClickListener {
-            topicListClickListener.onTopicListItemClicked(topicList[position])
+            topicListClickListener.onTopicListItemClicked(topicList[position].id)
         }
 
         holder.cardView.setOnLongClickListener {
-            Toast.makeText(it.context, "${topicList[position].topic} 삭제되었습니다.", Toast.LENGTH_SHORT)
-                .show()
-            deleteTopic(position)
+            topicListClickListener.onTopicDeleteClicked(topicList[position].id)
             true
         }
     }
 
     override fun getItemCount(): Int = topicList.size
 
-    fun setListClickListener(topicListClickListener: TopicListClickListener) {
+    fun setClickListener(topicListClickListener: TopicListClickListener) {
         this.topicListClickListener = topicListClickListener
     }
 

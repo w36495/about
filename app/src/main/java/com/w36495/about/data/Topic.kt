@@ -1,9 +1,15 @@
 package com.w36495.about.data
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "topics")
 data class Topic(
-    val id: Long,
     val topic: String,
-    val count: Int,
     val color: String,
     val registDate: String
-)
+) {
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0
+    var count: Int = 0
+}

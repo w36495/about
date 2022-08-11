@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,14 +16,20 @@ import com.w36495.about.listener.TopicListClickListener
 import com.w36495.about.R
 import com.w36495.about.adapter.TopicListAdapter
 import com.w36495.about.data.Topic
+import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.dialog.TopicAddDialog
 import com.w36495.about.listener.TopicDialogClickListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var topicListAdapter: TopicListAdapter
     private lateinit var toolbar: MaterialToolbar
+
+    private var database: AppDatabase? = null
 
     private val size = Point()
 
@@ -43,11 +48,13 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickLi
         val display = windowManager.defaultDisplay
         display.getSize(size)
 
+        database = AppDatabase.getInstance(view.context)
+
         recyclerView = view.findViewById(R.id.topic_list_recyclerview)
         toolbar = view.findViewById(R.id.topic_list_toolbar)
 
         topicListAdapter = TopicListAdapter()
-        topicListAdapter.setListClickListener(this)
+        topicListAdapter.setClickListener(this)
 
         recyclerView.adapter = topicListAdapter
         recyclerView.layoutManager = GridLayoutManager(view.context, 2)
@@ -63,19 +70,30 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickLi
                 else -> false
             }
         }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            database?.topicDao()?.getTopics()?.let { topicListAdapter.setTopicList(it) }
+        }
     }
 
-    override fun onTopicListItemClicked(topic: Topic) {
-        Toast.makeText(activity?.applicationContext, "${topic.topic} 주제 선택", Toast.LENGTH_SHORT)
-            .show()
+    override fun onTopicListItemClicked(topicId: Long) {
         parentFragmentManager.commit {
-            replace(R.id.main_fragment_container, ThinkListFragment(topic))
+            replace(R.id.main_fragment_container, ThinkListFragment(topicId))
             setReorderingAllowed(true)
             addToBackStack("thinkFragment")
         }
     }
 
     override fun onTopicSaveClicked(topic: Topic) {
-        topicListAdapter.appTopicList(topic)
+        CoroutineScope(Dispatchers.IO).launch {
+            database?.topicDao()?.insertTopic(topic)
+        }
+    }
+
+    override fun onTopicDeleteClicked(topicId: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            database?.thinkDao()?.deleteThinkByTopicId(topicId)
+            database?.topicDao()?.deleteTopicById(topicId)
+        }
     }
 }

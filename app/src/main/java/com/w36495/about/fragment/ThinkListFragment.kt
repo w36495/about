@@ -16,17 +16,23 @@ import com.w36495.about.ItemSwipeHelper
 import com.w36495.about.R
 import com.w36495.about.adapter.ThinkListAdapter
 import com.w36495.about.data.Think
-import com.w36495.about.data.Topic
+import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.dialog.ThinkAddDialog
 import com.w36495.about.listener.ThinkDialogClickListener
+import com.w36495.about.listener.ThinkSwipeListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class ThinkListFragment(val topic: Topic) : Fragment(), ThinkDialogClickListener {
+class ThinkListFragment(private val topicId: Long) : Fragment(), ThinkDialogClickListener, ThinkSwipeListener {
 
     private lateinit var toolbar: MaterialToolbar
     private lateinit var recyclerView: RecyclerView
     private lateinit var thinkListAdapter: ThinkListAdapter
 
     private lateinit var itemSwipeHelper: ItemSwipeHelper
+
+    private var database: AppDatabase? = null
 
     private val size = Point()
 
@@ -41,10 +47,13 @@ class ThinkListFragment(val topic: Topic) : Fragment(), ThinkDialogClickListener
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        database = AppDatabase.getInstance(view.context)
+
         toolbar = view.findViewById(R.id.think_list_toolbar)
         recyclerView = view.findViewById(R.id.think_list_recyclerview)
 
         thinkListAdapter = ThinkListAdapter()
+        thinkListAdapter.setClickListener(this)
 
         itemSwipeHelper = ItemSwipeHelper(thinkListAdapter)
         val itemTouchHelper = ItemTouchHelper(itemSwipeHelper)
@@ -58,7 +67,6 @@ class ThinkListFragment(val topic: Topic) : Fragment(), ThinkDialogClickListener
 
         display.getSize(size)
 
-        toolbar.title = topic.topic
         toolbar.setOnMenuItemClickListener { menu ->
             when (menu.itemId) {
                 R.id.main_add -> {
@@ -74,9 +82,28 @@ class ThinkListFragment(val topic: Topic) : Fragment(), ThinkDialogClickListener
         toolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val topic = database?.topicDao()?.getTopicTitleById(topicId)
+            toolbar.title = topic
+
+            val thinks = database?.thinkDao()?.getThinkListByTopicId(topicId)
+            thinks?.let {
+                thinkListAdapter.setThinkList(it)
+            }
+        }
     }
 
     override fun onThinkSaveClicked(think: Think) {
-        thinkListAdapter.addThink(think)
+        think.topicId = topicId
+        CoroutineScope(Dispatchers.IO).launch {
+            database?.thinkDao()?.insertThink(think)
+        }
+    }
+
+    override fun onThinkSwiped(thinkId: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            database?.thinkDao()?.deleteThinkById(thinkId)
+        }
     }
 }

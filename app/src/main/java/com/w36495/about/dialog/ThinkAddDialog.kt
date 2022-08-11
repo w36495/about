@@ -28,6 +28,8 @@ class ThinkAddDialog(
     private lateinit var saveButton: Button
     private lateinit var inputText: EditText
 
+    private final val TMP_TOPIC_ID: Long = 999999
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -78,7 +80,7 @@ class ThinkAddDialog(
         when (view?.id) {
             R.id.dialog_think_add_btn_save -> {
                 val think = Think(
-                    0L,
+                    TMP_TOPIC_ID,
                     inputText.text.toString(),
                     currentDateFormat(),
                     currentDateFormat()
