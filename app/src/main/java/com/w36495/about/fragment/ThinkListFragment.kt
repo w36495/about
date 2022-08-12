@@ -103,6 +103,12 @@ class ThinkListFragment(private val topicId: Long) : Fragment(), ThinkDialogClic
         }
     }
 
+    override fun onThinkUpdateClicked(think: Think) {
+        CoroutineScope(Dispatchers.IO).launch {
+            database?.thinkDao()?.updateThink(think)
+        }
+    }
+
     override fun onThinkSwiped(thinkId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
             database?.thinkDao()?.deleteThinkById(thinkId)
