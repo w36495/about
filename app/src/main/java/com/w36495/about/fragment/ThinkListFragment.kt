@@ -18,13 +18,15 @@ import com.w36495.about.adapter.ThinkListAdapter
 import com.w36495.about.data.Think
 import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.dialog.ThinkAddDialog
+import com.w36495.about.dialog.ThinkUpdateDialog
 import com.w36495.about.listener.ThinkDialogClickListener
+import com.w36495.about.listener.ThinkListItemClickListener
 import com.w36495.about.listener.ThinkSwipeListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ThinkListFragment(private val topicId: Long) : Fragment(), ThinkDialogClickListener, ThinkSwipeListener {
+class ThinkListFragment(private val topicId: Long) : Fragment(), ThinkDialogClickListener, ThinkSwipeListener, ThinkListItemClickListener {
 
     private lateinit var toolbar: MaterialToolbar
     private lateinit var recyclerView: RecyclerView
@@ -53,7 +55,7 @@ class ThinkListFragment(private val topicId: Long) : Fragment(), ThinkDialogClic
         recyclerView = view.findViewById(R.id.think_list_recyclerview)
 
         thinkListAdapter = ThinkListAdapter()
-        thinkListAdapter.setClickListener(this)
+        thinkListAdapter.setClickListener(this, this)
 
         itemSwipeHelper = ItemSwipeHelper(thinkListAdapter)
         val itemTouchHelper = ItemTouchHelper(itemSwipeHelper)
@@ -101,9 +103,21 @@ class ThinkListFragment(private val topicId: Long) : Fragment(), ThinkDialogClic
         }
     }
 
+    override fun onThinkUpdateClicked(think: Think) {
+        CoroutineScope(Dispatchers.IO).launch {
+            database?.thinkDao()?.updateThink(think)
+        }
+    }
+
     override fun onThinkSwiped(thinkId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
             database?.thinkDao()?.deleteThinkById(thinkId)
         }
+    }
+
+    override fun onThinkListItemClicked(position: Int, think: Think) {
+        ThinkUpdateDialog(position, think, size, this).show(
+            parentFragmentManager, "Think Item Update"
+        )
     }
 }
