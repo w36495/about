@@ -6,4 +6,6 @@ interface ThinkDialogClickListener {
 
     fun onThinkSaveClicked(think: Think)
 
+    fun onThinkUpdateClicked(think: Think)
+
 }
