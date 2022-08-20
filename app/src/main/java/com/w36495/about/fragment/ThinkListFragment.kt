@@ -16,18 +16,19 @@ import com.w36495.about.ItemSwipeHelper
 import com.w36495.about.R
 import com.w36495.about.adapter.ThinkListAdapter
 import com.w36495.about.data.Think
+import com.w36495.about.data.ThinkContract
+import com.w36495.about.data.ThinkPresenter
 import com.w36495.about.data.Topic
 import com.w36495.about.data.local.AppDatabase
+import com.w36495.about.data.repository.ThinkRepository
 import com.w36495.about.dialog.ThinkAddDialog
 import com.w36495.about.dialog.ThinkUpdateDialog
 import com.w36495.about.listener.ThinkDialogClickListener
 import com.w36495.about.listener.ThinkListItemClickListener
 import com.w36495.about.listener.ThinkSwipeListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
-class ThinkListFragment(private val topic: Topic) : Fragment(), ThinkDialogClickListener, ThinkSwipeListener, ThinkListItemClickListener {
+class ThinkListFragment(private val topic: Topic) : Fragment(), ThinkDialogClickListener,
+    ThinkSwipeListener, ThinkListItemClickListener, ThinkContract.View {
 
     private lateinit var toolbar: MaterialToolbar
     private lateinit var recyclerView: RecyclerView
@@ -36,6 +37,9 @@ class ThinkListFragment(private val topic: Topic) : Fragment(), ThinkDialogClick
     private lateinit var itemSwipeHelper: ItemSwipeHelper
 
     private var database: AppDatabase? = null
+    private lateinit var presenter: ThinkContract.Presenter
+
+    private var position: Int? = null
 
     private val size = Point()
 
@@ -54,6 +58,9 @@ class ThinkListFragment(private val topic: Topic) : Fragment(), ThinkDialogClick
 
         toolbar = view.findViewById(R.id.think_list_toolbar)
         recyclerView = view.findViewById(R.id.think_list_recyclerview)
+        presenter = ThinkPresenter(ThinkRepository(database!!.thinkDao()), this)
+
+        toolbar.title = topic.topic
 
         thinkListAdapter = ThinkListAdapter()
         thinkListAdapter.setClickListener(this, this)
@@ -73,7 +80,7 @@ class ThinkListFragment(private val topic: Topic) : Fragment(), ThinkDialogClick
         toolbar.setOnMenuItemClickListener { menu ->
             when (menu.itemId) {
                 R.id.main_add -> {
-                    ThinkAddDialog(size, this).show(
+                    ThinkAddDialog(topic.id, size, this).show(
                         parentFragmentManager, "think"
                     )
                     true
@@ -86,38 +93,35 @@ class ThinkListFragment(private val topic: Topic) : Fragment(), ThinkDialogClick
             parentFragmentManager.popBackStack()
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            toolbar.title = topic.topic
-
-            val thinks = database?.thinkDao()?.getThinkListByTopicId(topic.id)
-            thinks?.let {
-                thinkListAdapter.setThinkList(it)
-            }
-        }
+        presenter.getThinkList(topic.id)
     }
 
     override fun onThinkSaveClicked(think: Think) {
-        think.topicId = topic.id
-        CoroutineScope(Dispatchers.IO).launch {
-            database?.thinkDao()?.insertThink(think)
-        }
+        presenter.saveThink(think)
     }
 
     override fun onThinkUpdateClicked(think: Think) {
-        CoroutineScope(Dispatchers.IO).launch {
-            database?.thinkDao()?.updateThink(think)
-        }
+        presenter.updateThink(think)
     }
 
     override fun onThinkSwiped(thinkId: Long) {
-        CoroutineScope(Dispatchers.IO).launch {
-            database?.thinkDao()?.deleteThinkById(thinkId)
-        }
+        presenter.deleteThinkById(thinkId)
     }
 
     override fun onThinkListItemClicked(position: Int, think: Think) {
-        ThinkUpdateDialog(position, think, size, this).show(
-            parentFragmentManager, "Think Item Update"
-        )
+        this.position = position
+        showThink(think)
+    }
+
+    override fun showThinkList(thinkList: List<Think>) {
+        thinkListAdapter.setThinkList(thinkList)
+    }
+
+    override fun showThink(think: Think) {
+        position?.let {
+            ThinkUpdateDialog(it, think, size, this).show(
+                parentFragmentManager, "Think Item Update"
+            )
+        }
     }
 }

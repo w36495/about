@@ -18,6 +18,7 @@ import com.w36495.about.listener.ThinkDialogClickListener
 import com.w36495.about.util.currentDateFormat
 
 class ThinkAddDialog(
+    private val topicId: Long,
     private val size: Point,
     private val thinkDialogClickListener: ThinkDialogClickListener
 ) :
@@ -27,8 +28,6 @@ class ThinkAddDialog(
     private lateinit var cancelButton: Button
     private lateinit var saveButton: Button
     private lateinit var inputText: EditText
-
-    private final val TMP_TOPIC_ID: Long = 999999
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,7 +79,7 @@ class ThinkAddDialog(
         when (view?.id) {
             R.id.dialog_think_add_btn_save -> {
                 val think = Think(
-                    TMP_TOPIC_ID,
+                    topicId,
                     inputText.text.toString(),
                     currentDateFormat(),
                     currentDateFormat()
