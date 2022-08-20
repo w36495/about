@@ -16,6 +16,7 @@ import com.w36495.about.ItemSwipeHelper
 import com.w36495.about.R
 import com.w36495.about.adapter.ThinkListAdapter
 import com.w36495.about.data.Think
+import com.w36495.about.data.Topic
 import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.dialog.ThinkAddDialog
 import com.w36495.about.dialog.ThinkUpdateDialog
@@ -26,7 +27,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ThinkListFragment(private val topicId: Long) : Fragment(), ThinkDialogClickListener, ThinkSwipeListener, ThinkListItemClickListener {
+class ThinkListFragment(private val topic: Topic) : Fragment(), ThinkDialogClickListener, ThinkSwipeListener, ThinkListItemClickListener {
 
     private lateinit var toolbar: MaterialToolbar
     private lateinit var recyclerView: RecyclerView
@@ -86,10 +87,9 @@ class ThinkListFragment(private val topicId: Long) : Fragment(), ThinkDialogClic
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            val topic = database?.topicDao()?.getTopicTitleById(topicId)
-            toolbar.title = topic
+            toolbar.title = topic.topic
 
-            val thinks = database?.thinkDao()?.getThinkListByTopicId(topicId)
+            val thinks = database?.thinkDao()?.getThinkListByTopicId(topic.id)
             thinks?.let {
                 thinkListAdapter.setThinkList(it)
             }
@@ -97,7 +97,7 @@ class ThinkListFragment(private val topicId: Long) : Fragment(), ThinkDialogClic
     }
 
     override fun onThinkSaveClicked(think: Think) {
-        think.topicId = topicId
+        think.topicId = topic.id
         CoroutineScope(Dispatchers.IO).launch {
             database?.thinkDao()?.insertThink(think)
         }

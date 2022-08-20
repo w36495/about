@@ -8,17 +8,14 @@ import com.w36495.about.data.Topic
 @Dao
 interface TopicDao{
     @Query("SELECT * FROM topics")
-    fun getTopics(): List<Topic>
+    suspend fun getTopics(): List<Topic>
 
     @Query("SELECT * FROM topics WHERE id = :topicId")
-    fun getTopicById(topicId: Long): Topic
-
-    @Query("SELECT topic FROM topics WHERE id = :topicId")
-    fun getTopicTitleById(topicId: Long): String
+    suspend fun getTopicById(topicId: Long): Topic
 
     @Insert
-    fun insertTopic(topic: Topic)
+    suspend fun insertTopic(topic: Topic)
 
     @Query("DELETE FROM topics WHERE id = :topicId")
-    fun deleteTopicById(topicId: Long)
+    suspend fun deleteTopicById(topicId: Long)
 }

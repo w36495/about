@@ -16,20 +16,21 @@ import com.w36495.about.listener.TopicListClickListener
 import com.w36495.about.R
 import com.w36495.about.adapter.TopicListAdapter
 import com.w36495.about.data.Topic
+import com.w36495.about.data.TopicContract
+import com.w36495.about.data.TopicPresenter
+import com.w36495.about.data.repository.TopicRepository
 import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.dialog.TopicAddDialog
 import com.w36495.about.listener.TopicDialogClickListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
-class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickListener {
+class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickListener, TopicContract.View {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var topicListAdapter: TopicListAdapter
     private lateinit var toolbar: MaterialToolbar
 
     private var database: AppDatabase? = null
+    private lateinit var presenter: TopicContract.Presenter
 
     private val size = Point()
 
@@ -70,30 +71,32 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickLi
                 else -> false
             }
         }
-
-        CoroutineScope(Dispatchers.IO).launch {
-            database?.topicDao()?.getTopics()?.let { topicListAdapter.setTopicList(it) }
-        }
+        presenter = TopicPresenter(TopicRepository(database!!.topicDao()), this)
+        presenter.getTopicList()
     }
 
     override fun onTopicListItemClicked(topicId: Long) {
-        parentFragmentManager.commit {
-            replace(R.id.main_fragment_container, ThinkListFragment(topicId))
-            setReorderingAllowed(true)
-            addToBackStack("thinkFragment")
-        }
+        presenter.getTopic(topicId)
     }
 
     override fun onTopicSaveClicked(topic: Topic) {
-        CoroutineScope(Dispatchers.IO).launch {
-            database?.topicDao()?.insertTopic(topic)
-        }
+        presenter.saveTopic(topic)
     }
 
     override fun onTopicDeleteClicked(topicId: Long) {
-        CoroutineScope(Dispatchers.IO).launch {
-            database?.thinkDao()?.deleteThinkByTopicId(topicId)
-            database?.topicDao()?.deleteTopicById(topicId)
+        presenter.deleteTopicById(topicId)
+        // TODO: Think 에서도 삭제되어야 함
+    }
+
+    override fun showTopicList(topicList: List<Topic>) {
+        topicListAdapter.setTopicList(topicList)
+    }
+
+    override fun setTopic(topic: Topic) {
+        parentFragmentManager.commit {
+            replace(R.id.main_fragment_container, ThinkListFragment(topic))
+            setReorderingAllowed(true)
+            addToBackStack("thinkFragment")
         }
     }
 }
