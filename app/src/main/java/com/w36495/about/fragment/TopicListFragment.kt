@@ -79,8 +79,14 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickLi
         presenter.getTopic(topicId)
     }
 
-    override fun onTopicSaveClicked(topic: Topic) {
+    override fun onTopicSaveClicked(topic: Topic): Boolean {
+        if (!presenter.checkLengthOfTopic(topic.topic.length)) return false
         presenter.saveTopic(topic)
+        return true
+    }
+
+    override fun onErrorTopicSaved() {
+        // TODO : Topic 길이 제한이 1~10이 아닌 경우 -> 에러메세지 띄우기
     }
 
     override fun onTopicDeleteClicked(topicId: Long) {

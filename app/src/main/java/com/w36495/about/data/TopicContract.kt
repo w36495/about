@@ -12,6 +12,7 @@ interface TopicContract {
         fun getTopic(id: Long)
         fun getTopicList()
         fun deleteTopicById(id: Long)
+        fun checkLengthOfTopic(lengthOfTopic: Int): Boolean
     }
 
 }

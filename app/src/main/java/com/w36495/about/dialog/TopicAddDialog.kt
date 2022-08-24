@@ -86,8 +86,11 @@ class TopicAddDialog(
             R.id.dialog_topic_add_btn_save -> {
                 val topic =
                     Topic(inputText.text.toString(), selectedColor, currentDateFormat())
-                topicDialogClickListener.onTopicSaveClicked(topic)
-                dismiss()
+                if (topicDialogClickListener.onTopicSaveClicked(topic)) {
+                    dismiss()
+                } else {
+                    topicDialogClickListener.onErrorTopicSaved()
+                }
             }
 
             R.id.dialog_topic_add_btn_cancel -> {
