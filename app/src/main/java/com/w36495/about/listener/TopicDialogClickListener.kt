@@ -4,6 +4,8 @@ import com.w36495.about.data.Topic
 
 interface TopicDialogClickListener {
 
-    fun onTopicSaveClicked(topic: Topic)
+    fun onTopicSaveClicked(topic: Topic): Boolean
+
+    fun onErrorTopicSaved()
 
 }
