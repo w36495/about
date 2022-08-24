@@ -40,6 +40,6 @@ class TopicPresenter(
     }
 
     override fun checkLengthOfTopic(lengthOfTopic: Int): Boolean {
-        return lengthOfTopic in 1..10
+        return lengthOfTopic in 1..30
     }
 }
