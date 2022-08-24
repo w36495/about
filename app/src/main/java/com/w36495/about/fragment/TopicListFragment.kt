@@ -79,7 +79,8 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickLi
         presenter.getTopic(topicId)
     }
 
-    override fun onTopicSaveClicked(topic: Topic) {
+    override fun onTopicSaveClicked(topic: Topic): Boolean {
+        if (!presenter.checkLengthOfTopic(topic.topic.length)) return false
         presenter.saveTopic(topic)
         return true
     }
