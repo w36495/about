@@ -1,10 +1,12 @@
 package com.w36495.about.adapter
 
+import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +15,7 @@ import com.w36495.about.R
 import com.w36495.about.data.Topic
 import com.w36495.about.util.calDate
 
-class TopicListAdapter : RecyclerView.Adapter<TopicListAdapter.TopicListViewHolder>() {
+class TopicListAdapter(private val context: Context) : RecyclerView.Adapter<TopicListAdapter.TopicListViewHolder>() {
 
     private var topicList = arrayListOf<Topic>()
     private lateinit var topicListClickListener: TopicListClickListener
@@ -40,6 +42,13 @@ class TopicListAdapter : RecyclerView.Adapter<TopicListAdapter.TopicListViewHold
     }
 
     override fun onBindViewHolder(holder: TopicListViewHolder, position: Int) {
+        if (position != 0) {
+            val margin = dpToPx(16)
+            val layoutParams: FrameLayout.LayoutParams = holder.cardView.layoutParams as FrameLayout.LayoutParams
+            layoutParams.setMargins(margin, 0, margin, margin)
+            holder.cardView.layoutParams = layoutParams
+        }
+
         holder.count.text = topicList[position].count.toString()
         holder.date.text = calDate(topicList[position].registDate).toString()
         holder.topic.text = topicList[position].topic
@@ -74,5 +83,10 @@ class TopicListAdapter : RecyclerView.Adapter<TopicListAdapter.TopicListViewHold
     fun deleteTopic(index: Int) {
         topicList.removeAt(index)
         notifyDataSetChanged()
+    }
+
+    private fun dpToPx(dp: Int): Int {
+        val px: Float = dp * context.resources.displayMetrics.density
+        return px.toInt()
     }
 }
