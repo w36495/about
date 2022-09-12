@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.w36495.about.listener.TopicListClickListener
@@ -54,11 +54,11 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickLi
         recyclerView = view.findViewById(R.id.topic_list_recyclerview)
         toolbar = view.findViewById(R.id.topic_list_toolbar)
 
-        topicListAdapter = TopicListAdapter()
+        topicListAdapter = TopicListAdapter(view.context)
         topicListAdapter.setClickListener(this)
 
         recyclerView.adapter = topicListAdapter
-        recyclerView.layoutManager = GridLayoutManager(view.context, 2)
+        recyclerView.layoutManager = LinearLayoutManager(view.context)
 
         toolbar.setOnMenuItemClickListener { menu ->
             when (menu.itemId) {
