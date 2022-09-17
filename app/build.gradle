@@ -41,9 +41,6 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.fragment:fragment-ktx:1.5.1'
 
-    // Color Picker Library
-    implementation 'com.github.Dhaval2404:ColorPicker:2.3'
-
     // Room Database
     implementation("androidx.room:room-ktx:2.4.3")
     implementation("androidx.room:room-runtime:2.4.3")

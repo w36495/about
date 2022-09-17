@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="about_default_gradient_grey">
+        <item>#E0E0E0</item>
+        <item>#C6C6C6</item>
+        <item>#939393</item>
+        <item>#7A7A7A</item>
+    </string-array>
+</resources>

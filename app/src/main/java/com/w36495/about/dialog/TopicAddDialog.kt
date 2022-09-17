@@ -11,8 +11,6 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
-import com.github.dhaval2404.colorpicker.ColorPickerDialog
-import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.google.android.material.appbar.MaterialToolbar
 import com.w36495.about.R
 import com.w36495.about.data.Topic
@@ -49,7 +47,6 @@ class TopicAddDialog(
         cancelButton = view.findViewById(R.id.dialog_topic_add_btn_cancel)
         saveButton = view.findViewById(R.id.dialog_topic_add_btn_save)
         inputText = view.findViewById(R.id.dialog_topic_add_input)
-        colorSelectButton = view.findViewById(R.id.dialog_topic_add_btn_color)
 
         cancelButton.setOnClickListener(this)
         saveButton.setOnClickListener(this)
@@ -95,19 +92,6 @@ class TopicAddDialog(
 
             R.id.dialog_topic_add_btn_cancel -> {
                 dismiss()
-            }
-
-            R.id.dialog_topic_add_btn_color -> {
-                ColorPickerDialog
-                    .Builder(view.context)
-                    .setTitle("Pick Theme")
-                    .setColorShape(ColorShape.SQAURE)
-                    .setDefaultColor(selectedColor)
-                    .setColorListener { _, colorHex ->
-                        colorSelectButton.setBackgroundColor(Color.parseColor(colorHex))
-                        selectedColor = colorHex
-                    }
-                    .show()
             }
         }
     }

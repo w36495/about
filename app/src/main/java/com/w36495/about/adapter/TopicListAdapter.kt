@@ -15,7 +15,10 @@ import com.w36495.about.R
 import com.w36495.about.data.Topic
 import com.w36495.about.util.calDate
 
-class TopicListAdapter(private val context: Context) : RecyclerView.Adapter<TopicListAdapter.TopicListViewHolder>() {
+class TopicListAdapter(
+    private val context: Context,
+    private val colors: List<String>
+    ) : RecyclerView.Adapter<TopicListAdapter.TopicListViewHolder>() {
 
     private var topicList = arrayListOf<Topic>()
     private lateinit var topicListClickListener: TopicListClickListener
@@ -49,10 +52,11 @@ class TopicListAdapter(private val context: Context) : RecyclerView.Adapter<Topi
             holder.cardView.layoutParams = layoutParams
         }
 
+        setCountBackgroundColor(holder, position)
+
         holder.count.text = topicList[position].count.toString()
         holder.date.text = calDate(topicList[position].registDate).toString()
         holder.topic.text = topicList[position].topic
-        holder.count.setBackgroundColor(Color.parseColor(topicList[position].color))
 
         holder.cardView.setOnClickListener {
             topicListClickListener.onTopicListItemClicked(topicList[position].id)
@@ -88,5 +92,17 @@ class TopicListAdapter(private val context: Context) : RecyclerView.Adapter<Topi
     private fun dpToPx(dp: Int): Int {
         val px: Float = dp * context.resources.displayMetrics.density
         return px.toInt()
+    }
+
+    private fun setCountBackgroundColor(holder: TopicListViewHolder, position: Int) {
+        if (topicList[position].count <= 10) {
+            holder.count.setBackgroundColor(Color.parseColor(colors[0]))
+        } else if (topicList[position].count <= 30) {
+            holder.count.setBackgroundColor(Color.parseColor(colors[1]))
+        } else if (topicList[position].count <= 50) {
+            holder.count.setBackgroundColor(Color.parseColor(colors[2]))
+        } else {
+            holder.count.setBackgroundColor(Color.parseColor(colors[3]))
+        }
     }
 }

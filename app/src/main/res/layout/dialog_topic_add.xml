@@ -22,29 +22,17 @@
             app:title="@string/title_topic_add"
             app:titleCentered="true" />
 
-        <Button
-            android:id="@+id/dialog_topic_add_btn_color"
-            android:layout_width="24dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="@color/about_gray1"
-            app:layout_constraintEnd_toStartOf="@id/dialog_topic_add_input"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dialog_topic_add_toolbar" />
-
         <EditText
             android:id="@+id/dialog_topic_add_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginHorizontal="16dp"
             android:layout_marginTop="24dp"
-            android:layout_marginEnd="30dp"
             android:hint="@string/dialog_topic_hint"
             android:maxLines="1"
             android:singleLine="true"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/dialog_topic_add_btn_color"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dialog_topic_add_toolbar" />
 
         <Button

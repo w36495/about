@@ -12,16 +12,16 @@ import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
-import com.w36495.about.listener.TopicListClickListener
 import com.w36495.about.R
 import com.w36495.about.adapter.TopicListAdapter
 import com.w36495.about.data.Topic
 import com.w36495.about.data.TopicContract
 import com.w36495.about.data.TopicPresenter
-import com.w36495.about.data.repository.TopicRepository
 import com.w36495.about.data.local.AppDatabase
+import com.w36495.about.data.repository.TopicRepository
 import com.w36495.about.dialog.TopicAddDialog
 import com.w36495.about.listener.TopicDialogClickListener
+import com.w36495.about.listener.TopicListClickListener
 
 class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickListener, TopicContract.View {
 
@@ -45,6 +45,10 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val _colors = resources.getStringArray(R.array.about_default_gradient_grey)
+        val colors = arrayListOf<String>()
+        _colors.forEach { colors.add(it) }
+
         val windowManager = view.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display = windowManager.defaultDisplay
         display.getSize(size)
@@ -54,7 +58,7 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickLi
         recyclerView = view.findViewById(R.id.topic_list_recyclerview)
         toolbar = view.findViewById(R.id.topic_list_toolbar)
 
-        topicListAdapter = TopicListAdapter(view.context)
+        topicListAdapter = TopicListAdapter(view.context, colors)
         topicListAdapter.setClickListener(this)
 
         recyclerView.adapter = topicListAdapter
