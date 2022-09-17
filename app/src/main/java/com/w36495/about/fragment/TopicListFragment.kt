@@ -18,6 +18,7 @@ import com.w36495.about.data.Topic
 import com.w36495.about.data.TopicContract
 import com.w36495.about.data.TopicPresenter
 import com.w36495.about.data.local.AppDatabase
+import com.w36495.about.data.repository.ThinkRepository
 import com.w36495.about.data.repository.TopicRepository
 import com.w36495.about.dialog.TopicAddDialog
 import com.w36495.about.listener.TopicDialogClickListener
@@ -75,7 +76,10 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickLi
                 else -> false
             }
         }
-        presenter = TopicPresenter(TopicRepository(database!!.topicDao()), this)
+        presenter = TopicPresenter(
+            TopicRepository(database!!.topicDao()),
+            ThinkRepository(database!!.thinkDao()),
+            this)
         presenter.getTopicList()
     }
 

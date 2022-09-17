@@ -9,6 +9,8 @@ class ThinkRepository(private val thinkDao: ThinkDao) {
 
     suspend fun getThinkList(topicId: Long): List<Think> = thinkDao.getThinkListByTopicId(topicId)
 
+    suspend fun getThinkListSize(topicId: Long): Int = thinkDao.getThinkListSizeByTopicId(topicId)
+
     suspend fun saveThink(think: Think) = thinkDao.insertThink(think)
 
     suspend fun updateThink(think: Think) = thinkDao.updateThink(think)
