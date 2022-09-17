@@ -12,7 +12,7 @@ interface ThinkDao {
     suspend fun getThinkById(thinkId: Long): Think
 
     @Query("SELECT count(*) FROM thinks WHERE topicId = :topicId")
-    fun getThinkListCountByTopicId(topicId: Long): Int
+    suspend fun getThinkListSizeByTopicId(topicId: Long): Int
 
     @Update
     suspend fun updateThink(think: Think)
