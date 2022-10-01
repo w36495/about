@@ -1,4 +1,6 @@
-package com.w36495.about.data
+package com.w36495.about.contract
+
+import com.w36495.about.domain.entity.Topic
 
 interface TopicContract {
 

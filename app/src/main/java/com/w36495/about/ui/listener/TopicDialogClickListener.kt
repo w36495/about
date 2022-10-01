@@ -1,6 +1,6 @@
-package com.w36495.about.listener
+package com.w36495.about.ui.listener
 
-import com.w36495.about.data.Topic
+import com.w36495.about.domain.entity.Topic
 
 interface TopicDialogClickListener {
 

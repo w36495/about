@@ -1,4 +1,4 @@
-package com.w36495.about.adapter
+package com.w36495.about.ui.adapter
 
 import android.content.Context
 import android.graphics.Color
@@ -10,9 +10,9 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.w36495.about.listener.TopicListClickListener
+import com.w36495.about.ui.listener.TopicListClickListener
 import com.w36495.about.R
-import com.w36495.about.data.Topic
+import com.w36495.about.domain.entity.Topic
 import com.w36495.about.util.calDate
 
 class TopicListAdapter(

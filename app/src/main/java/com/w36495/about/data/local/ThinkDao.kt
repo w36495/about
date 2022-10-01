@@ -1,7 +1,7 @@
 package com.w36495.about.data.local
 
 import androidx.room.*
-import com.w36495.about.data.Think
+import com.w36495.about.domain.entity.Think
 
 @Dao
 interface ThinkDao {

@@ -1,5 +1,7 @@
-package com.w36495.about.data
+package com.w36495.about.ui.presenter
 
+import com.w36495.about.domain.entity.Think
+import com.w36495.about.contract.ThinkContract
 import com.w36495.about.data.repository.ThinkRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

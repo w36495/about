@@ -1,4 +1,4 @@
-package com.w36495.about.dialog
+package com.w36495.about.ui.dialog
 
 import android.graphics.Color
 import android.graphics.Point
@@ -13,13 +13,15 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.appbar.MaterialToolbar
 import com.w36495.about.R
-import com.w36495.about.data.Topic
-import com.w36495.about.listener.TopicDialogClickListener
+import com.w36495.about.domain.entity.Think
+import com.w36495.about.ui.listener.ThinkDialogClickListener
 import com.w36495.about.util.currentDateFormat
 
-class TopicAddDialog(
+class ThinkUpdateDialog(
+    private val position: Int,
+    private val think: Think,
     private val size: Point,
-    private val topicDialogClickListener: TopicDialogClickListener
+    private val thinkDialogClickListener: ThinkDialogClickListener
 ) :
     DialogFragment(), View.OnClickListener {
 
@@ -27,9 +29,6 @@ class TopicAddDialog(
     private lateinit var cancelButton: Button
     private lateinit var saveButton: Button
     private lateinit var inputText: EditText
-    private lateinit var colorSelectButton: Button
-
-    private var selectedColor: String = "#DCDCDC"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,20 +36,22 @@ class TopicAddDialog(
         savedInstanceState: Bundle?
     ): View? {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        return inflater.inflate(R.layout.dialog_topic_add, container, false)
+        return inflater.inflate(R.layout.dialog_think_add, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        dialogToolbar = view.findViewById(R.id.dialog_topic_add_toolbar)
-        cancelButton = view.findViewById(R.id.dialog_topic_add_btn_cancel)
-        saveButton = view.findViewById(R.id.dialog_topic_add_btn_save)
-        inputText = view.findViewById(R.id.dialog_topic_add_input)
+        dialogToolbar = view.findViewById(R.id.dialog_think_add_toolbar)
+        cancelButton = view.findViewById(R.id.dialog_think_add_btn_cancel)
+        saveButton = view.findViewById(R.id.dialog_think_add_btn_save)
+        inputText = view.findViewById(R.id.dialog_think_add_input)
 
         cancelButton.setOnClickListener(this)
         saveButton.setOnClickListener(this)
-        colorSelectButton.setOnClickListener(this)
+
+        dialogToolbar.title = "${position + 1}번째 생각"
+        inputText.setText(think.text)
 
         dialogToolbar.setOnMenuItemClickListener { menu ->
             when (menu.itemId) {
@@ -80,17 +81,14 @@ class TopicAddDialog(
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.dialog_topic_add_btn_save -> {
-                val topic =
-                    Topic(inputText.text.toString(), selectedColor, currentDateFormat())
-                if (topicDialogClickListener.onTopicSaveClicked(topic)) {
-                    dismiss()
-                } else {
-                    topicDialogClickListener.onErrorTopicSaved()
-                }
+            R.id.dialog_think_add_btn_save -> {
+                think.text = inputText.text.toString()
+                think.updateDate = currentDateFormat()
+                thinkDialogClickListener.onThinkUpdateClicked(think)
+                dismiss()
             }
 
-            R.id.dialog_topic_add_btn_cancel -> {
+            R.id.dialog_think_add_btn_cancel -> {
                 dismiss()
             }
         }

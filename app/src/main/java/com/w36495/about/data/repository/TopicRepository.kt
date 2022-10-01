@@ -1,6 +1,6 @@
 package com.w36495.about.data.repository
 
-import com.w36495.about.data.Topic
+import com.w36495.about.domain.entity.Topic
 import com.w36495.about.data.local.TopicDao
 
 class TopicRepository(private val topicDao: TopicDao) {

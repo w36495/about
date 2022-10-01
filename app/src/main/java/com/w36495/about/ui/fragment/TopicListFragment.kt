@@ -1,4 +1,4 @@
-package com.w36495.about.fragment
+package com.w36495.about.ui.fragment
 
 import android.content.Context
 import android.graphics.Point
@@ -13,16 +13,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.w36495.about.R
-import com.w36495.about.adapter.TopicListAdapter
-import com.w36495.about.data.Topic
-import com.w36495.about.data.TopicContract
-import com.w36495.about.data.TopicPresenter
+import com.w36495.about.ui.adapter.TopicListAdapter
+import com.w36495.about.domain.entity.Topic
+import com.w36495.about.contract.TopicContract
+import com.w36495.about.ui.presenter.TopicPresenter
 import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.data.repository.ThinkRepository
 import com.w36495.about.data.repository.TopicRepository
-import com.w36495.about.dialog.TopicAddDialog
-import com.w36495.about.listener.TopicDialogClickListener
-import com.w36495.about.listener.TopicListClickListener
+import com.w36495.about.ui.dialog.TopicAddDialog
+import com.w36495.about.ui.listener.TopicDialogClickListener
+import com.w36495.about.ui.listener.TopicListClickListener
 
 class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickListener, TopicContract.View {
 

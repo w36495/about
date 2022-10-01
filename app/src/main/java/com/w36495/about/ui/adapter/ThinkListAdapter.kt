@@ -1,4 +1,4 @@
-package com.w36495.about.adapter
+package com.w36495.about.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +7,10 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.w36495.about.R
-import com.w36495.about.data.Think
-import com.w36495.about.listener.ItemSwipeListener
-import com.w36495.about.listener.ThinkListItemClickListener
-import com.w36495.about.listener.ThinkSwipeListener
+import com.w36495.about.domain.entity.Think
+import com.w36495.about.ui.listener.ItemSwipeListener
+import com.w36495.about.ui.listener.ThinkListItemClickListener
+import com.w36495.about.ui.listener.ThinkSwipeListener
 
 class ThinkListAdapter : RecyclerView.Adapter<ThinkListAdapter.ThinkListViewHolder>(),
     ItemSwipeListener {

@@ -2,8 +2,8 @@ package com.w36495.about.data.local
 
 import android.content.Context
 import androidx.room.*
-import com.w36495.about.data.Think
-import com.w36495.about.data.Topic
+import com.w36495.about.domain.entity.Think
+import com.w36495.about.domain.entity.Topic
 
 @Database(
     version = 1,

@@ -1,4 +1,4 @@
-package com.w36495.about.dialog
+package com.w36495.about.ui.dialog
 
 import android.graphics.Color
 import android.graphics.Point
@@ -13,8 +13,8 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.appbar.MaterialToolbar
 import com.w36495.about.R
-import com.w36495.about.data.Think
-import com.w36495.about.listener.ThinkDialogClickListener
+import com.w36495.about.domain.entity.Think
+import com.w36495.about.ui.listener.ThinkDialogClickListener
 import com.w36495.about.util.currentDateFormat
 
 class ThinkAddDialog(
