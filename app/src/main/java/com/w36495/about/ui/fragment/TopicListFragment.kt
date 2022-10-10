@@ -36,6 +36,8 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
     private lateinit var topicListContext: Context
     private var database: AppDatabase? = null
 
+    private val THINK_LIST_TAG: String = "THINK_LIST_FRAGMENT"
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var topicListAdapter: TopicListAdapter
     private lateinit var toolbar: MaterialToolbar
@@ -146,8 +148,9 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
 
     override fun showTopic(topic: Topic) {
         parentFragmentManager.commit {
-            replace(R.id.main_fragment_container, ThinkListFragment(topic))
             setReorderingAllowed(true)
+            addToBackStack(THINK_LIST_TAG)
+            replace(R.id.main_fragment_container, ThinkListFragment(topic))
         }
     }
 
