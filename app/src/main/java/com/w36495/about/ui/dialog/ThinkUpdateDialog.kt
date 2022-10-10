@@ -15,7 +15,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.w36495.about.R
 import com.w36495.about.domain.entity.Think
 import com.w36495.about.ui.listener.ThinkDialogClickListener
-import com.w36495.about.util.currentDateFormat
+import com.w36495.about.util.DateFormat
 
 class ThinkUpdateDialog(
     private val position: Int,
@@ -83,7 +83,7 @@ class ThinkUpdateDialog(
         when (view?.id) {
             R.id.dialog_think_add_btn_save -> {
                 think.text = inputText.text.toString()
-                think.updateDate = currentDateFormat()
+                think.updateDate = DateFormat.currentDateFormat()
                 thinkDialogClickListener.onThinkUpdateClicked(think)
                 dismiss()
             }

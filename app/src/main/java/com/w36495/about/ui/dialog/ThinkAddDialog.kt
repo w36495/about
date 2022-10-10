@@ -15,7 +15,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.w36495.about.R
 import com.w36495.about.domain.entity.Think
 import com.w36495.about.ui.listener.ThinkDialogClickListener
-import com.w36495.about.util.currentDateFormat
+import com.w36495.about.util.DateFormat
 
 class ThinkAddDialog(
     private val topicId: Long,
@@ -81,8 +81,8 @@ class ThinkAddDialog(
                 val think = Think(
                     topicId,
                     inputText.text.toString(),
-                    currentDateFormat(),
-                    currentDateFormat()
+                    DateFormat.currentDateFormat(),
+                    DateFormat.currentDateFormat()
                 )
                 thinkDialogClickListener.onThinkSaveClicked(think)
                 dismiss()

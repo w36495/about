@@ -13,12 +13,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.w36495.about.ui.listener.TopicListClickListener
 import com.w36495.about.R
 import com.w36495.about.domain.entity.Topic
-import com.w36495.about.util.calDate
+import com.w36495.about.util.DateFormat
 
 class TopicListAdapter(
     private val context: Context,
     private val colors: List<String>
-    ) : RecyclerView.Adapter<TopicListAdapter.TopicListViewHolder>() {
+) : RecyclerView.Adapter<TopicListAdapter.TopicListViewHolder>() {
 
     private var topicList = arrayListOf<Topic>()
     private lateinit var topicListClickListener: TopicListClickListener
@@ -47,7 +47,8 @@ class TopicListAdapter(
     override fun onBindViewHolder(holder: TopicListViewHolder, position: Int) {
         if (position != 0) {
             val margin = dpToPx(16)
-            val layoutParams: FrameLayout.LayoutParams = holder.cardView.layoutParams as FrameLayout.LayoutParams
+            val layoutParams: FrameLayout.LayoutParams =
+                holder.cardView.layoutParams as FrameLayout.LayoutParams
             layoutParams.setMargins(margin, 0, margin, margin)
             holder.cardView.layoutParams = layoutParams
         }
@@ -55,7 +56,7 @@ class TopicListAdapter(
         setCountBackgroundColor(holder, position)
 
         holder.count.text = topicList[position].count.toString()
-        holder.date.text = calDate(topicList[position].registDate).toString()
+        holder.date.text = DateFormat.calDate(topicList[position].registDate).toString()
         holder.topic.text = topicList[position].topic
 
         holder.cardView.setOnClickListener {
