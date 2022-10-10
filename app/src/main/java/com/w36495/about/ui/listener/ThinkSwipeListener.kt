@@ -1,4 +1,4 @@
-package com.w36495.about.listener
+package com.w36495.about.ui.listener
 
 interface ThinkSwipeListener {
 

@@ -1,6 +1,6 @@
-package com.w36495.about.listener
+package com.w36495.about.ui.listener
 
-import com.w36495.about.data.Think
+import com.w36495.about.domain.entity.Think
 
 interface ThinkDialogClickListener {
 

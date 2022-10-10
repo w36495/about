@@ -1,8 +1,9 @@
-package com.w36495.about
+package com.w36495.about.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.w36495.about.fragment.TopicListFragment
+import com.w36495.about.R
+import com.w36495.about.ui.fragment.TopicListFragment
 
 class MainActivity : AppCompatActivity() {
 

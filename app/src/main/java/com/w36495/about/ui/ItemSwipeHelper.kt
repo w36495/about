@@ -1,8 +1,8 @@
-package com.w36495.about
+package com.w36495.about.ui
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.w36495.about.listener.ItemSwipeListener
+import com.w36495.about.ui.listener.ItemSwipeListener
 
 class ItemSwipeHelper(private val itemSwipeListener: ItemSwipeListener) :
     ItemTouchHelper.Callback() {

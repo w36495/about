@@ -1,6 +1,6 @@
 package com.w36495.about.data.repository
 
-import com.w36495.about.data.Think
+import com.w36495.about.domain.entity.Think
 import com.w36495.about.data.local.ThinkDao
 
 class ThinkRepository(private val thinkDao: ThinkDao) {

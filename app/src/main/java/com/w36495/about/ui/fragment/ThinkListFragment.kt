@@ -1,4 +1,4 @@
-package com.w36495.about.fragment
+package com.w36495.about.ui.fragment
 
 import android.content.Context
 import android.graphics.Point
@@ -12,20 +12,20 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
-import com.w36495.about.ItemSwipeHelper
+import com.w36495.about.ui.ItemSwipeHelper
 import com.w36495.about.R
-import com.w36495.about.adapter.ThinkListAdapter
-import com.w36495.about.data.Think
-import com.w36495.about.data.ThinkContract
-import com.w36495.about.data.ThinkPresenter
-import com.w36495.about.data.Topic
+import com.w36495.about.ui.adapter.ThinkListAdapter
+import com.w36495.about.domain.entity.Think
+import com.w36495.about.contract.ThinkContract
+import com.w36495.about.ui.presenter.ThinkPresenter
+import com.w36495.about.domain.entity.Topic
 import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.data.repository.ThinkRepository
-import com.w36495.about.dialog.ThinkAddDialog
-import com.w36495.about.dialog.ThinkUpdateDialog
-import com.w36495.about.listener.ThinkDialogClickListener
-import com.w36495.about.listener.ThinkListItemClickListener
-import com.w36495.about.listener.ThinkSwipeListener
+import com.w36495.about.ui.dialog.ThinkAddDialog
+import com.w36495.about.ui.dialog.ThinkUpdateDialog
+import com.w36495.about.ui.listener.ThinkDialogClickListener
+import com.w36495.about.ui.listener.ThinkListItemClickListener
+import com.w36495.about.ui.listener.ThinkSwipeListener
 
 class ThinkListFragment(private val topic: Topic) : Fragment(), ThinkDialogClickListener,
     ThinkSwipeListener, ThinkListItemClickListener, ThinkContract.View {

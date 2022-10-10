@@ -1,10 +1,14 @@
-package com.w36495.about.data
+package com.w36495.about.contract
+
+import com.w36495.about.domain.entity.Topic
 
 interface TopicContract {
 
     interface View {
         fun showTopicList(topicList: List<Topic>)
-        fun setTopic(topic: Topic)
+        fun showTopic(topic: Topic)
+        fun showError(tag: String, message: String?)
+        fun showToast(message: String?)
     }
 
     interface Presenter {
@@ -12,7 +16,6 @@ interface TopicContract {
         fun getTopic(id: Long)
         fun getTopicList()
         fun deleteTopicById(id: Long)
-        fun checkLengthOfTopic(lengthOfTopic: Int): Boolean
     }
 
 }

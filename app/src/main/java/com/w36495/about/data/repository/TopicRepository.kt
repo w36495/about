@@ -1,15 +1,16 @@
 package com.w36495.about.data.repository
 
-import com.w36495.about.data.Topic
-import com.w36495.about.data.local.TopicDao
+import com.w36495.about.domain.entity.Topic
+import kotlinx.coroutines.flow.Flow
 
-class TopicRepository(private val topicDao: TopicDao) {
+interface TopicRepository {
 
-    suspend fun getTopic(id: Long): Topic = topicDao.getTopicById(id)
+    suspend fun getTopic(id: Long): Flow<Topic>
 
-    suspend fun getTopicList(): List<Topic> = topicDao.getTopics()
+    suspend fun getTopicList(): Flow<List<Topic>>
 
-    suspend fun saveTopic(topic: Topic) = topicDao.insertTopic(topic)
+    suspend fun saveTopic(topic: Topic): Flow<String>
 
-    suspend fun deleteTopicById(topicId: Long) = topicDao.deleteTopicById(topicId)
+    suspend fun deleteTopicById(topicId: Long): Flow<String>
+
 }

@@ -1,4 +1,4 @@
-package com.w36495.about.dialog
+package com.w36495.about.ui.dialog
 
 import android.graphics.Color
 import android.graphics.Point
@@ -13,13 +13,12 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.appbar.MaterialToolbar
 import com.w36495.about.R
-import com.w36495.about.data.Think
-import com.w36495.about.listener.ThinkDialogClickListener
-import com.w36495.about.util.currentDateFormat
+import com.w36495.about.domain.entity.Think
+import com.w36495.about.ui.listener.ThinkDialogClickListener
+import com.w36495.about.util.DateFormat
 
-class ThinkUpdateDialog(
-    private val position: Int,
-    private val think: Think,
+class ThinkAddDialog(
+    private val topicId: Long,
     private val size: Point,
     private val thinkDialogClickListener: ThinkDialogClickListener
 ) :
@@ -50,9 +49,6 @@ class ThinkUpdateDialog(
         cancelButton.setOnClickListener(this)
         saveButton.setOnClickListener(this)
 
-        dialogToolbar.title = "${position + 1}번째 생각"
-        inputText.setText(think.text)
-
         dialogToolbar.setOnMenuItemClickListener { menu ->
             when (menu.itemId) {
                 R.id.dialog_add_menu_close -> {
@@ -82,9 +78,13 @@ class ThinkUpdateDialog(
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.dialog_think_add_btn_save -> {
-                think.text = inputText.text.toString()
-                think.updateDate = currentDateFormat()
-                thinkDialogClickListener.onThinkUpdateClicked(think)
+                val think = Think(
+                    topicId,
+                    inputText.text.toString(),
+                    DateFormat.currentDateFormat(),
+                    DateFormat.currentDateFormat()
+                )
+                thinkDialogClickListener.onThinkSaveClicked(think)
                 dismiss()
             }
 

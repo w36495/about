@@ -3,7 +3,7 @@ package com.w36495.about.data.local
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.w36495.about.data.Topic
+import com.w36495.about.domain.entity.Topic
 
 @Dao
 interface TopicDao{
