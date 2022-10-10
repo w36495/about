@@ -42,7 +42,7 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
 
     private lateinit var presenter: TopicContract.Presenter
 
-    private val size = Point()
+    private lateinit var getResultTopic: ActivityResultLauncher<Intent>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,6 +54,24 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        topicListContext = view.context
+
+        getResultTopic = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.let {
+                    val topic = Topic(
+                        it.getStringExtra("topic")!!,
+                        it.getStringExtra("color")!!,
+                        it.getStringExtra("date")!!
+                    )
+                    (presenter as TopicPresenter).saveTopic(topic)
+                }
+            } else {
+                println("===== getResultTopic - Failed =====")
+            }
+        }
 
         val _colors = resources.getStringArray(R.array.about_default_gradient_grey)
         val colors = arrayListOf<String>()
@@ -79,9 +97,8 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
         toolbar.setOnMenuItemClickListener { menu ->
             when (menu.itemId) {
                 R.id.main_add -> {
-                    TopicAddDialog(size, this).show(
-                        parentFragmentManager, "topic"
-                    )
+                    val topicAddIntent = Intent(view.context, TopicAddDialogActivity::class.java)
+                    getResultTopic.launch(topicAddIntent)
                     true
                 }
                 else -> false
