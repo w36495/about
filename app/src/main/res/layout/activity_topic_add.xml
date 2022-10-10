@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
-    app:cardCornerRadius="20dp">
+    android:layout_gravity="center"
+    android:background="@drawable/bg_dialog_rounded">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -12,31 +12,37 @@
         android:paddingBottom="10dp">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/dialog_topic_add_toolbar"
+            android:id="@+id/activity_topic_add_toolbar"
             android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="56dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/dialog_top_close_menu"
             app:title="@string/title_topic_add"
-            app:titleCentered="true" />
+            app:titleCentered="true"
+            app:titleTextColor="@color/black" />
 
         <EditText
-            android:id="@+id/dialog_topic_add_input"
+            android:id="@+id/activity_topic_add_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="24dp"
+            android:backgroundTint="@color/about_grey3"
             android:hint="@string/dialog_topic_hint"
             android:maxLines="1"
+            android:minHeight="48dp"
             android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/about_grey5"
+            android:textCursorDrawable="@drawable/edit_cursor_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dialog_topic_add_toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/activity_topic_add_toolbar" />
 
         <Button
-            android:id="@+id/dialog_topic_add_btn_cancel"
+            android:id="@+id/activity_topic_add_btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -45,10 +51,10 @@
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dialog_topic_add_input" />
+            app:layout_constraintTop_toBottomOf="@id/activity_topic_add_input" />
 
         <Button
-            android:id="@+id/dialog_topic_add_btn_save"
+            android:id="@+id/activity_topic_add_btn_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
@@ -56,8 +62,8 @@
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/dialog_topic_add_btn_cancel" />
+            app:layout_constraintTop_toTopOf="@id/activity_topic_add_btn_cancel" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
