@@ -79,16 +79,6 @@ class TopicListAdapter(
         notifyDataSetChanged()
     }
 
-    fun appTopicList(topic: Topic) {
-        topicList.add(topic)
-        notifyDataSetChanged()
-    }
-
-    fun deleteTopic(index: Int) {
-        topicList.removeAt(index)
-        notifyDataSetChanged()
-    }
-
     private fun dpToPx(dp: Int): Int {
         val px: Float = dp * context.resources.displayMetrics.density
         return px.toInt()
