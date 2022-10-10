@@ -1,14 +1,20 @@
 package com.w36495.about.ui.fragment
 
+import android.app.Activity
 import android.content.Context
-import android.graphics.Point
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
@@ -16,21 +22,24 @@ import com.w36495.about.R
 import com.w36495.about.ui.adapter.TopicListAdapter
 import com.w36495.about.domain.entity.Topic
 import com.w36495.about.contract.TopicContract
+import com.w36495.about.data.TopicUiState
 import com.w36495.about.ui.presenter.TopicPresenter
 import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.data.repository.ThinkRepository
-import com.w36495.about.data.repository.TopicRepository
-import com.w36495.about.ui.dialog.TopicAddDialog
-import com.w36495.about.ui.listener.TopicDialogClickListener
+import com.w36495.about.data.repository.TopicRepositoryImpl
+import com.w36495.about.ui.dialog.TopicAddDialogActivity
 import com.w36495.about.ui.listener.TopicListClickListener
+import kotlinx.coroutines.launch
 
-class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickListener, TopicContract.View {
+class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View {
+
+    private lateinit var topicListContext: Context
+    private var database: AppDatabase? = null
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var topicListAdapter: TopicListAdapter
     private lateinit var toolbar: MaterialToolbar
 
-    private var database: AppDatabase? = null
     private lateinit var presenter: TopicContract.Presenter
 
     private val size = Point()
@@ -50,20 +59,22 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickLi
         val colors = arrayListOf<String>()
         _colors.forEach { colors.add(it) }
 
-        val windowManager = view.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val display = windowManager.defaultDisplay
-        display.getSize(size)
-
         database = AppDatabase.getInstance(view.context)
 
         recyclerView = view.findViewById(R.id.topic_list_recyclerview)
         toolbar = view.findViewById(R.id.topic_list_toolbar)
 
-        topicListAdapter = TopicListAdapter(view.context, colors)
+        topicListAdapter = TopicListAdapter(topicListContext, colors)
         topicListAdapter.setClickListener(this)
 
         recyclerView.adapter = topicListAdapter
-        recyclerView.layoutManager = LinearLayoutManager(view.context)
+        recyclerView.layoutManager = LinearLayoutManager(topicListContext)
+
+        presenter = TopicPresenter(
+            TopicRepositoryImpl(database!!.topicDao()),
+            ThinkRepository(database!!.thinkDao()),
+            this
+        )
 
         toolbar.setOnMenuItemClickListener { menu ->
             when (menu.itemId) {
@@ -76,25 +87,35 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickLi
                 else -> false
             }
         }
-        presenter = TopicPresenter(
-            TopicRepository(database!!.topicDao()),
-            ThinkRepository(database!!.thinkDao()),
-            this)
+
+        showTopics()
+    }
+
+    private fun showTopics() {
         presenter.getTopicList()
+
+        lifecycleScope.launch {
+            (presenter as TopicPresenter).uiState.collect { uiState ->
+                when (uiState) {
+                    is TopicUiState.Loading -> {
+                        println("===== loading =====")
+                    }
+                    is TopicUiState.Empty -> {
+                        println("===== empty =====")
+                    }
+                    is TopicUiState.Success -> {
+                        topicListAdapter.setTopicList(uiState.list)
+                    }
+                    is TopicUiState.Failed -> {
+                        println("===== failed : ${uiState.message} =====")
+                    }
+                }
+            }
+        }
     }
 
     override fun onTopicListItemClicked(topicId: Long) {
         presenter.getTopic(topicId)
-    }
-
-    override fun onTopicSaveClicked(topic: Topic): Boolean {
-        if (!presenter.checkLengthOfTopic(topic.topic.length)) return false
-        presenter.saveTopic(topic)
-        return true
-    }
-
-    override fun onErrorTopicSaved() {
-        // TODO : Topic 길이 제한이 1~10이 아닌 경우 -> 에러메세지 띄우기
     }
 
     override fun onTopicDeleteClicked(topicId: Long) {
@@ -106,11 +127,34 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicDialogClickLi
         topicListAdapter.setTopicList(topicList)
     }
 
-    override fun setTopic(topic: Topic) {
+    override fun showTopic(topic: Topic) {
         parentFragmentManager.commit {
             replace(R.id.main_fragment_container, ThinkListFragment(topic))
             setReorderingAllowed(true)
-            addToBackStack("thinkFragment")
         }
+    }
+
+    override fun showError(tag: String, message: String?) {
+        val handler = Handler(Looper.getMainLooper())
+
+        if (tag == "TOPIC_DELETE") {
+            handler.postDelayed(Runnable {
+                Toast.makeText(topicListContext, "삭제하는 과정에서 오류가 발생하였습니다.", Toast.LENGTH_SHORT)
+                    .show()
+            }, 0)
+        } else if (tag == "TOPIC_INSERT") {
+            handler.postDelayed(Runnable {
+                Toast.makeText(topicListContext, "저장하는 과정에서 오류가 발생하였습니다.", Toast.LENGTH_SHORT)
+                    .show()
+            }, 0)
+        }
+    }
+
+    override fun showToast(message: String?) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed(Runnable {
+            Toast.makeText(topicListContext, message, Toast.LENGTH_SHORT).show()
+        }, 0)
+        showTopics()
     }
 }
