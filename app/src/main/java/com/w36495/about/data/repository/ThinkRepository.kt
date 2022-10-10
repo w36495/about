@@ -1,22 +1,22 @@
 package com.w36495.about.data.repository
 
 import com.w36495.about.domain.entity.Think
-import com.w36495.about.data.local.ThinkDao
+import kotlinx.coroutines.flow.Flow
 
-class ThinkRepository(private val thinkDao: ThinkDao) {
+interface ThinkRepository {
 
-    suspend fun getThink(id: Long): Think = thinkDao.getThinkById(id)
+    suspend fun getThink(id: Long): Flow<Think>
 
-    suspend fun getThinkList(topicId: Long): List<Think> = thinkDao.getThinkListByTopicId(topicId)
+    suspend fun getThinkList(topicId: Long): Flow<List<Think>>
 
-    suspend fun getThinkListSize(topicId: Long): Int = thinkDao.getThinkListSizeByTopicId(topicId)
+    suspend fun getThinkListSize(topicId: Long): Flow<Int>
 
-    suspend fun saveThink(think: Think) = thinkDao.insertThink(think)
+    suspend fun saveThink(think: Think): Flow<String>
 
-    suspend fun updateThink(think: Think) = thinkDao.updateThink(think)
+    suspend fun updateThink(think: Think): Flow<String>
 
-    suspend fun deleteThinkById(id: Long) = thinkDao.deleteThinkById(id)
+    suspend fun deleteThinkById(id: Long): Flow<String>
 
-    suspend fun deleteThinkByTopicId(id: Long) = thinkDao.deleteThinkByTopicId(id)
+    suspend fun deleteThinkByTopicId(id: Long): Flow<String>
 
 }
