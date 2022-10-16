@@ -17,7 +17,6 @@ interface ThinkContract {
         fun saveThink(think: Think)
         fun updateThink(think: Think)
         fun deleteThinkById(id: Long)
-        fun deleteThinkByTopicId(topicId: Long)
     }
 
 }

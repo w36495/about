@@ -79,16 +79,4 @@ class ThinkPresenter(
                 }
         }
     }
-
-    override fun deleteThinkByTopicId(topicId: Long) {
-        CoroutineScope(Dispatchers.IO).launch {
-            thinkRepository.deleteThinkByTopicId(topicId)
-                .catch { exception ->
-                    thinkContractView.showError(exception.localizedMessage)
-                }
-                .collect {
-                    thinkContractView.showToast("성공적으로 삭제되었습니다.")
-                }
-        }
-    }
 }
