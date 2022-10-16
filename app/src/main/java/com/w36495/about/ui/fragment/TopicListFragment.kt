@@ -25,9 +25,9 @@ import com.w36495.about.contract.TopicContract
 import com.w36495.about.data.TopicUiState
 import com.w36495.about.ui.presenter.TopicPresenter
 import com.w36495.about.data.local.AppDatabase
-import com.w36495.about.data.repository.ThinkRepository
+import com.w36495.about.data.repository.ThinkRepositoryImpl
 import com.w36495.about.data.repository.TopicRepositoryImpl
-import com.w36495.about.ui.dialog.TopicAddDialogActivity
+import com.w36495.about.ui.dialog.TopicDialogActivity
 import com.w36495.about.ui.listener.TopicListClickListener
 import kotlinx.coroutines.launch
 
@@ -35,6 +35,8 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
 
     private lateinit var topicListContext: Context
     private var database: AppDatabase? = null
+
+    private val THINK_LIST_TAG: String = "THINK_LIST_FRAGMENT"
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var topicListAdapter: TopicListAdapter
@@ -90,15 +92,15 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
 
         presenter = TopicPresenter(
             TopicRepositoryImpl(database!!.topicDao()),
-            ThinkRepository(database!!.thinkDao()),
+            ThinkRepositoryImpl(database!!.thinkDao()),
             this
         )
 
         toolbar.setOnMenuItemClickListener { menu ->
             when (menu.itemId) {
                 R.id.main_add -> {
-                    val topicAddIntent = Intent(view.context, TopicAddDialogActivity::class.java)
-                    getResultTopic.launch(topicAddIntent)
+                    val moveTopicDialogIntent = Intent(view.context, TopicDialogActivity::class.java)
+                    getResultTopic.launch(moveTopicDialogIntent)
                     true
                 }
                 else -> false
@@ -146,8 +148,9 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
 
     override fun showTopic(topic: Topic) {
         parentFragmentManager.commit {
-            replace(R.id.main_fragment_container, ThinkListFragment(topic))
             setReorderingAllowed(true)
+            addToBackStack(THINK_LIST_TAG)
+            replace(R.id.main_fragment_container, ThinkListFragment(topic))
         }
     }
 

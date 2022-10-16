@@ -22,7 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.dialog.TopicAddDialogActivity" android:theme="@style/AboutTheme.Dialog"/>
+가        <activity android:name=".ui.dialog.TopicDialogActivity" android:theme="@style/AboutTheme.Dialog"/>
+        <activity android:name=".ui.dialog.ThinkDialogActivity" android:theme="@style/AboutTheme.Dialog" />
     </application>
 
 </manifest>

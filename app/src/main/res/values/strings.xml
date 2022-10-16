@@ -18,4 +18,5 @@
     <string name="dialog_title_delete">삭제하시겠습니까?</string>
     <string name="dialog_message_delete">개의 생각들도 함께 삭제됩니다.</string>
     <string name="dialog_topic_hint">주제 입력</string>
+    <string name="dialog_think_hint">생각 입력</string>
 </resources>

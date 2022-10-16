@@ -1,6 +1,5 @@
 package com.w36495.about.ui.dialog
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -9,47 +8,58 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 import com.w36495.about.R
-import com.w36495.about.domain.entity.Topic
-import com.w36495.about.ui.fragment.TopicListFragment
-import com.w36495.about.util.DateFormat
-import com.w36495.about.util.StringFormat
+import com.w36495.about.ui.fragment.ThinkListFragment
 
-class TopicAddDialogActivity : AppCompatActivity(), View.OnClickListener {
+class ThinkDialogActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var dialogToolbar: MaterialToolbar
     private lateinit var cancelButton: Button
     private lateinit var saveButton: Button
     private lateinit var inputText: EditText
 
+    private var CURRENT_DIALOG_STATE: String? = null
+    private var position: Int? = null
+    private var oldThink: String? = null
+
     private val size = Point()
-    private var selectedColor: String = "#DCDCDC"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.activity_topic_add)
+        setContentView(R.layout.activity_think_dialog)
+
+        initDialog()
+
+        if (intent.getStringExtra("tag") == ThinkListFragment.DIALOG_UPDATE_TAG) {
+            CURRENT_DIALOG_STATE = intent.getStringExtra("tag")
+            position = intent.getIntExtra("position", -1)
+            oldThink = intent.getStringExtra("think")
+        } else {
+            CURRENT_DIALOG_STATE = intent.getStringExtra("tag")
+        }
+
+        position?.let {
+            dialogToolbar.title = "${it+1}번째 생각"
+            inputText.setText(oldThink)
+        }
 
         val windowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display = windowManager.defaultDisplay
         display.getSize(size)
-        initDialog()
     }
 
     private fun initDialog() {
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        dialogToolbar = findViewById(R.id.activity_topic_add_toolbar)
-        cancelButton = findViewById(R.id.activity_topic_add_btn_cancel)
-        saveButton = findViewById(R.id.activity_topic_add_btn_save)
-        inputText = findViewById(R.id.activity_topic_add_input)
+        dialogToolbar = findViewById(R.id.dialog_think_add_toolbar)
+        cancelButton = findViewById(R.id.dialog_think_add_btn_cancel)
+        saveButton = findViewById(R.id.dialog_think_add_btn_save)
+        inputText = findViewById(R.id.dialog_think_add_input)
 
         cancelButton.setOnClickListener(this)
         saveButton.setOnClickListener(this)
@@ -76,24 +86,19 @@ class TopicAddDialogActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.activity_topic_add_btn_save -> {
-                val topic =
-                    Topic(inputText.text.toString(), selectedColor, DateFormat.currentDateFormat())
+            R.id.dialog_think_add_btn_save -> {
+                val moveThinkListIntent = Intent(this, ThinkListFragment::class.java)
+                moveThinkListIntent.putExtra("think", inputText.text.toString())
 
-                if (StringFormat.checkLengthOfTopic(topic.topic.length)) {
-                    val moveTopicList = Intent(this, TopicListFragment::class.java)
-                    moveTopicList.putExtra("topic", topic.topic)
-                    moveTopicList.putExtra("color", topic.color)
-                    moveTopicList.putExtra("date", topic.registDate)
-                    setResult(Activity.RESULT_OK, moveTopicList)
-                    finish()
-                } else {
-                    Toast.makeText(this, "저장에 실패하였습니다.", Toast.LENGTH_SHORT).show()
+                if (CURRENT_DIALOG_STATE == ThinkListFragment.DIALOG_ADD_TAG) {
+                    setResult(ThinkListFragment.DIALOG_ADD_RESULT_CODE, moveThinkListIntent)
+                } else if (CURRENT_DIALOG_STATE == ThinkListFragment.DIALOG_UPDATE_TAG) {
+                    setResult(ThinkListFragment.DIALOG_UPDATE_RESULT_CODE, moveThinkListIntent)
                 }
                 finish()
             }
 
-            R.id.activity_topic_add_btn_cancel -> {
+            R.id.dialog_think_add_btn_cancel -> {
                 finish()
             }
         }
