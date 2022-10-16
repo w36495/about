@@ -15,6 +15,7 @@ interface TopicContract {
         fun saveTopic(topic: Topic)
         fun getTopic(id: Long)
         fun getTopicList()
+//        fun getThinkListSize(id: Long): Int
         fun deleteTopicById(id: Long)
         fun deleteThinkListByTopicId(id: Long)
     }

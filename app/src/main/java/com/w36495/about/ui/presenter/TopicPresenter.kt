@@ -18,6 +18,7 @@ class TopicPresenter(
 
     private val TAG_INSERT: String = "TOPIC_INSERT"
     private val TAG_DELETE: String = "TOPIC_DELETE"
+    private val TAG_THINK_LIST_SIZE: String = "THINK_LIST_SIZE"
 
     private val _uiState = MutableStateFlow<TopicUiState>(TopicUiState.Loading)
     val uiState: StateFlow<TopicUiState> = _uiState.asStateFlow()
@@ -59,6 +60,15 @@ class TopicPresenter(
                     _uiState.value = TopicUiState.Failed(exception.localizedMessage)
                 }
                 .collect {
+                    it.forEach { topic ->
+                        thinkRepository.getThinkListSize(topic.id)
+                            .catch { exception ->
+                                topicContractView.showError(TAG_THINK_LIST_SIZE, exception.localizedMessage)
+                            }
+                            .collect {
+                                topic.count = it
+                            }
+                    }
                     _uiState.value = TopicUiState.Success(it)
                 }
         }
