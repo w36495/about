@@ -3,7 +3,7 @@ package com.w36495.about.ui.presenter
 import com.w36495.about.domain.entity.Topic
 import com.w36495.about.contract.TopicContract
 import com.w36495.about.data.TopicUiState
-import com.w36495.about.data.repository.ThinkRepository
+import com.w36495.about.data.repository.ThinkRepositoryImpl
 import com.w36495.about.data.repository.TopicRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class TopicPresenter(
     private val topicRepository: TopicRepositoryImpl,
-    private val thinkRepository: ThinkRepository,
+    private val thinkRepository: ThinkRepositoryImpl,
     private val topicContractView: TopicContract.View
 ) : TopicContract.Presenter {
 
@@ -56,7 +56,7 @@ class TopicPresenter(
                     _uiState.value = TopicUiState.Loading
                 }
                 .catch { exception ->
-                    TopicUiState.Failed(exception.localizedMessage)
+                    _uiState.value = TopicUiState.Failed(exception.localizedMessage)
                 }
                 .collect {
                     _uiState.value = TopicUiState.Success(it)
