@@ -7,6 +7,8 @@ interface ThinkContract {
     interface View {
         fun showThinkList(thinkList: List<Think>)
         fun showThink(think: Think)
+        fun showToast(message: String)
+        fun showError(message: String)
     }
 
     interface Presenter {
