@@ -12,4 +12,18 @@
         <item name="android:backgroundDimAmount">0.5</item>
     </style>
 
+    <style name="alert_dialog_delete_style" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="buttonBarNeutralButtonStyle">@style/alert_dialog_normal_btn_black</item>
+        <item name="buttonBarPositiveButtonStyle">@style/alert_dialog_delete_btn_red</item>
+    </style>
+
+    <style name="alert_dialog_normal_btn_black" parent="Widget.Material3.Button.TextButton.Dialog.Flush">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="alert_dialog_delete_btn_red" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/about_red</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>
