@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.w36495.about.R
 import com.w36495.about.ui.adapter.TopicListAdapter
 import com.w36495.about.domain.entity.Topic
@@ -137,9 +138,18 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
         presenter.getTopic(topicId)
     }
 
-    override fun onTopicDeleteClicked(topicId: Long) {
-        presenter.deleteTopicById(topicId)
-        // TODO: Think 에서도 삭제되어야 함
+    override fun onTopicDeleteClicked(topicId: Long, topic: Topic) {
+        MaterialAlertDialogBuilder(topicListContext, R.style.alert_dialog_delete_style)
+            .setTitle("${topic.topic}을(를) 삭제하시겠습니까?")
+            .setMessage("${topic.topic}에 등록된 44개의 생각들도 함께 삭제됩니다.")
+            .setNeutralButton("취소") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton("삭제") { _, _ ->
+                presenter.deleteThinkListByTopicId(topicId)
+                presenter.deleteTopicById(topicId)
+            }
+            .show()
     }
 
     override fun showTopicList(topicList: List<Topic>) {

@@ -75,4 +75,14 @@ class TopicPresenter(
                 }
         }
     }
+
+    override fun deleteThinkListByTopicId(id: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            thinkRepository.deleteThinkByTopicId(id)
+                .catch { exception ->
+                    topicContractView.showError(TAG_DELETE, exception.localizedMessage)
+                }
+                .collect()
+        }
+    }
 }

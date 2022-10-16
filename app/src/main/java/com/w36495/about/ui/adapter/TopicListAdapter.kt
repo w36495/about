@@ -64,7 +64,7 @@ class TopicListAdapter(
         }
 
         holder.cardView.setOnLongClickListener {
-            topicListClickListener.onTopicDeleteClicked(topicList[position].id)
+            topicListClickListener.onTopicDeleteClicked(topicList[position].id, topicList[position])
             true
         }
     }
