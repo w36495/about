@@ -22,7 +22,7 @@ import com.w36495.about.ui.fragment.TopicListFragment
 import com.w36495.about.util.DateFormat
 import com.w36495.about.util.StringFormat
 
-class TopicAddDialogActivity : AppCompatActivity(), View.OnClickListener {
+class TopicDialogActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var dialogToolbar: MaterialToolbar
     private lateinit var cancelButton: Button
@@ -35,7 +35,7 @@ class TopicAddDialogActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.activity_topic_add)
+        setContentView(R.layout.activity_topic_dialog)
 
         val windowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display = windowManager.defaultDisplay
