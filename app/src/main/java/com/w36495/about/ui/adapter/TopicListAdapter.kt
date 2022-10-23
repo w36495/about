@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
@@ -45,14 +44,6 @@ class TopicListAdapter(
     }
 
     override fun onBindViewHolder(holder: TopicListViewHolder, position: Int) {
-        if (position != 0) {
-            val margin = dpToPx(16)
-            val layoutParams: FrameLayout.LayoutParams =
-                holder.cardView.layoutParams as FrameLayout.LayoutParams
-            layoutParams.setMargins(margin, 0, margin, margin)
-            holder.cardView.layoutParams = layoutParams
-        }
-
         setCountBackgroundColor(holder, position)
 
         holder.count.text = topicList[position].count.toString()
@@ -78,11 +69,6 @@ class TopicListAdapter(
     fun setTopicList(topicList: List<Topic>) {
         this.topicList = topicList as ArrayList<Topic>
         notifyDataSetChanged()
-    }
-
-    private fun dpToPx(dp: Int): Int {
-        val px: Float = dp * context.resources.displayMetrics.density
-        return px.toInt()
     }
 
     private fun setCountBackgroundColor(holder: TopicListViewHolder, position: Int) {
