@@ -140,8 +140,8 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
 
     override fun onTopicDeleteClicked(topicId: Long, topic: Topic) {
         MaterialAlertDialogBuilder(topicListContext, R.style.alert_dialog_delete_style)
-            .setTitle("${topic.topic}을(를) 삭제하시겠습니까?")
-            .setMessage("${topic.topic}에 등록된 44개의 생각들도 함께 삭제됩니다.")
+            .setTitle("주제 삭제")
+            .setMessage("${topic.topic}에 등록된 ${topic.count}개의 생각들도 함께 삭제되며 복구가 불가능합니다.\n정말 삭제하시겠습니까?")
             .setNeutralButton("취소") { dialog, _ ->
                 dialog.dismiss()
             }
