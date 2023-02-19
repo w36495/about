@@ -1,6 +1,5 @@
 package com.w36495.about.ui.dialog
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -85,7 +84,7 @@ class TopicDialogActivity : AppCompatActivity(), View.OnClickListener {
                     moveTopicList.putExtra("topic", topic.topic)
                     moveTopicList.putExtra("color", topic.color)
                     moveTopicList.putExtra("date", topic.registDate)
-                    setResult(Activity.RESULT_OK, moveTopicList)
+                    setResult(TopicListFragment.INTENT_RESULT_TOPIC, moveTopicList)
                     finish()
                 } else {
                     Toast.makeText(this, "저장에 실패하였습니다.", Toast.LENGTH_SHORT).show()

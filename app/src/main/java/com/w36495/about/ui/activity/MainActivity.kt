@@ -1,4 +1,4 @@
-package com.w36495.about.ui
+package com.w36495.about.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

@@ -1,5 +1,6 @@
 package com.w36495.about.ui.presenter
 
+import com.w36495.about.R
 import com.w36495.about.domain.entity.Topic
 import com.w36495.about.contract.TopicContract
 import com.w36495.about.data.TopicUiState
@@ -16,10 +17,6 @@ class TopicPresenter(
     private val topicContractView: TopicContract.View
 ) : TopicContract.Presenter {
 
-    private val TAG_INSERT: String = "TOPIC_INSERT"
-    private val TAG_DELETE: String = "TOPIC_DELETE"
-    private val TAG_THINK_LIST_SIZE: String = "THINK_LIST_SIZE"
-
     private val _uiState = MutableStateFlow<TopicUiState>(TopicUiState.Loading)
     val uiState: StateFlow<TopicUiState> = _uiState.asStateFlow()
 
@@ -27,10 +24,10 @@ class TopicPresenter(
         CoroutineScope(Dispatchers.IO).launch {
             topicRepository.saveTopic(topic)
                 .catch { exception ->
-                    topicContractView.showError(TAG_INSERT, exception.localizedMessage)
+                    topicContractView.showError(R.string.tag_topic_insert.toString(), exception.localizedMessage)
                 }
                 .collect {
-                    topicContractView.showToast("새로운 주제가 저장되었습니다.")
+                    topicContractView.showToast("새로운 주제가 등록되었습니다.")
                 }
         }
     }
@@ -63,7 +60,7 @@ class TopicPresenter(
                     it.forEach { topic ->
                         thinkRepository.getThinkListSize(topic.id)
                             .catch { exception ->
-                                topicContractView.showError(TAG_THINK_LIST_SIZE, exception.localizedMessage)
+                                topicContractView.showError(R.string.tag_think_list_size.toString(), exception.localizedMessage)
                             }
                             .collect {
                                 topic.count = it
@@ -74,11 +71,51 @@ class TopicPresenter(
         }
     }
 
+    override fun deleteAllTopic() {
+        CoroutineScope(Dispatchers.IO).launch {
+            var topicListCount = 0
+            var thinkListCount = 0
+            topicRepository.getTopicListCount()
+                .catch { exception ->
+                    printError("topicRepository.getTopicListCount()", exception.localizedMessage)
+                }
+                .collect {
+                    topicListCount = it
+                }
+            thinkRepository.getThinkListCount()
+                .catch { exception ->
+                    printError("thinkRepository.getThinkListCount()", exception.localizedMessage)
+                }
+                .collect {
+                    thinkListCount = it
+                }
+
+            if (topicListCount == 0) {
+                topicContractView.showError(R.string.tag_topic_list_empty.toString(), "등록된 주제가 없습니다.")
+            } else {
+                topicRepository.deleteAllTopic()
+                    .catch { exception ->
+                        printError("topicRepository.deleteAllTopic()", exception.localizedMessage)
+                    }
+                    .collect {
+                        if (thinkListCount != 0) {
+                            thinkRepository.deleteAllThink()
+                                .catch { exception ->
+                                    printError("thinkRepository.deleteAllThink()", exception.localizedMessage)
+                                }
+                                .collect ()
+                        }
+                        topicContractView.showEmptyTopicList()
+                    }
+            }
+        }
+    }
+
     override fun deleteTopicById(id: Long) {
         CoroutineScope(Dispatchers.IO).launch {
             topicRepository.deleteTopicById(id)
                 .catch { exception ->
-                    topicContractView.showError(TAG_DELETE, exception.localizedMessage)
+                    topicContractView.showError(R.string.tag_topic_delete.toString(), exception.localizedMessage)
                 }
                 .collect {
                     topicContractView.showToast("해당 주제가 삭제되었습니다.")
@@ -90,9 +127,13 @@ class TopicPresenter(
         CoroutineScope(Dispatchers.IO).launch {
             thinkRepository.deleteThinkByTopicId(id)
                 .catch { exception ->
-                    topicContractView.showError(TAG_DELETE, exception.localizedMessage)
+                    topicContractView.showError(R.string.tag_topic_delete.toString(), exception.localizedMessage)
                 }
                 .collect()
         }
+    }
+
+    private fun printError(tag: String, error: String) {
+        println("===== $tag : $error =====")
     }
 }

@@ -11,4 +11,23 @@
     <string name="title_app_name">About</string>
     <string name="dialog_topic_hint">주제 입력</string>
     <string name="dialog_think_hint">생각 입력</string>
+    <string name="menu_setting_reset">초기화</string>
+    <string name="dialog_btn_check">확인</string>
+    <string name="dialog_reset_text">저장된 주제와 생각들이 모두 삭제되며, 복구가 불가능합니다.</string>
+    <string name="dialog_reset_title">초기화를 진행하시겠습니까?</string>
+
+    <string name="tag_topic_insert">TOPIC_INSERT</string>
+    <string name="tag_topic_update">TOPIC_UPDATE</string>
+    <string name="tag_topic_delete">TOPIC_DELETE</string>
+    <string name="tag_topic_delete_all">TOPIC_DELETE_ALL</string>
+    <string name="tag_topic_list_size">TOPIC_LIST_SIZE</string>
+    <string name="tag_topic_list_empty">TOPIC_LIST_EMPTY</string>
+
+    <string name="tag_think_insert">THINK_INSERT</string>
+    <string name="tag_think_update">THINK_UPDATE</string>
+    <string name="tag_think_delete">THINK_DELETE</string>
+    <string name="tag_think_delete_all">THINK_DELETE_ALL</string>
+    <string name="tag_think_list_size">THINK_LIST_SIZE</string>
+    <string name="tag_think_list_empty">THINK_LIST_EMPTY</string>
+
 </resources>

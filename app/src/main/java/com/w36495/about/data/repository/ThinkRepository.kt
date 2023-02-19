@@ -11,6 +11,8 @@ interface ThinkRepository {
 
     suspend fun getThinkListSize(topicId: Long): Flow<Int>
 
+    suspend fun getThinkListCount(): Flow<Int>
+
     suspend fun saveThink(think: Think): Flow<String>
 
     suspend fun updateThink(think: Think): Flow<String>
@@ -18,5 +20,7 @@ interface ThinkRepository {
     suspend fun deleteThinkById(id: Long): Flow<String>
 
     suspend fun deleteThinkByTopicId(id: Long): Flow<String>
+
+    suspend fun deleteAllThink(): Flow<String>
 
 }

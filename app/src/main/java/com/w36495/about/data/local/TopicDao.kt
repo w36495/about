@@ -18,4 +18,10 @@ interface TopicDao{
 
     @Query("DELETE FROM topics WHERE id = :topicId")
     suspend fun deleteTopicById(topicId: Long)
+
+    @Query("DELETE FROM topics")
+    suspend fun deleteAllTopic()
+
+    @Query("SELECT count(*) FROM topics")
+    suspend fun getTopicListCount(): Int
 }
