@@ -71,6 +71,11 @@ class TopicListAdapter(
         notifyDataSetChanged()
     }
 
+    fun setTopicEmptyList() {
+        this.topicList.clear()
+        notifyDataSetChanged()
+    }
+
     private fun setCountBackgroundColor(holder: TopicListViewHolder, position: Int) {
         if (topicList[position].count <= 10) {
             holder.count.setBackgroundColor(Color.parseColor(colors[0]))

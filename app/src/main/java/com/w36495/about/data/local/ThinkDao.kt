@@ -25,4 +25,10 @@ interface ThinkDao {
 
     @Query("DELETE FROM thinks WHERE id = :thinkId")
     suspend fun deleteThinkById(thinkId: Long)
+
+    @Query("DELETE FROM thinks")
+    suspend fun deleteAllThinks()
+
+    @Query("SELECT count(*) FROM thinks")
+    suspend fun getThinkListCount(): Int
 }

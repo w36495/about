@@ -8,28 +8,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/think_list_toolbar"
-            android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_constraintBottom_toTopOf="@id/think_list_divider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/dialog_top_add_menu"
-            app:navigationIcon="@drawable/ic_baseline_navigate_before_24"
-            app:title="@string/title_topic"
-            app:titleCentered="true" />
-
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/think_list_divider"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/think_list_appbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:dividerColor="@color/about_grey1"
-            app:layout_constraintBottom_toTopOf="@id/think_list_recyclerview"
+            android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/think_list_toolbar" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/think_list_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:menu="@menu/dialog_top_add_menu"
+                app:navigationIcon="@drawable/ic_baseline_navigate_before_24"
+                app:title="@string/title_topic"
+                app:titleCentered="true" />
+
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/think_list_recyclerview"
@@ -38,7 +35,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/think_list_divider" />
+            app:layout_constraintTop_toBottomOf="@id/think_list_appbar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

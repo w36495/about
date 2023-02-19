@@ -1,6 +1,5 @@
 package com.w36495.about.ui.fragment
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -28,6 +27,7 @@ import com.w36495.about.ui.presenter.TopicPresenter
 import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.data.repository.ThinkRepositoryImpl
 import com.w36495.about.data.repository.TopicRepositoryImpl
+import com.w36495.about.ui.activity.SettingActivity
 import com.w36495.about.ui.dialog.TopicDialogActivity
 import com.w36495.about.ui.listener.TopicListClickListener
 import kotlinx.coroutines.launch
@@ -39,13 +39,18 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
 
     private val THINK_LIST_TAG: String = "THINK_LIST_FRAGMENT"
 
+    companion object {
+        val INTENT_RESULT_TOPIC: Int = 100
+        val INTENT_RESULT_RESET: Int = 101
+    }
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var topicListAdapter: TopicListAdapter
     private lateinit var toolbar: MaterialToolbar
-
     private lateinit var presenter: TopicContract.Presenter
-
     private lateinit var getResultTopic: ActivityResultLauncher<Intent>
+
+    private var handler: Handler? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,12 +62,17 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        init(view)
+    }
+
+    private fun init(view: View) {
         topicListContext = view.context
 
         getResultTopic = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == INTENT_RESULT_TOPIC) {
                 result.data?.let {
                     val topic = Topic(
                         it.getStringExtra("topic")!!,
@@ -71,6 +81,8 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
                     )
                     (presenter as TopicPresenter).saveTopic(topic)
                 }
+            } else if (result.resultCode == INTENT_RESULT_RESET) {
+                presenter.deleteAllTopic()
             } else {
                 println("===== getResultTopic - Failed =====")
             }
@@ -100,12 +112,18 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
         toolbar.setOnMenuItemClickListener { menu ->
             when (menu.itemId) {
                 R.id.main_add -> {
-                    val moveTopicDialogIntent = Intent(view.context, TopicDialogActivity::class.java)
+                    val moveTopicDialogIntent =
+                        Intent(view.context, TopicDialogActivity::class.java)
                     getResultTopic.launch(moveTopicDialogIntent)
                     true
                 }
                 else -> false
             }
+        }
+
+        toolbar.setNavigationOnClickListener {
+            val moveSettingActivity = Intent(topicListContext, SettingActivity::class.java)
+            getResultTopic.launch(moveSettingActivity)
         }
 
         showTopics()
@@ -122,6 +140,7 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
                     }
                     is TopicUiState.Empty -> {
                         println("===== empty =====")
+                        topicListAdapter.setTopicEmptyList()
                     }
                     is TopicUiState.Success -> {
                         topicListAdapter.setTopicList(uiState.list)
@@ -156,6 +175,9 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
         topicListAdapter.setTopicList(topicList)
     }
 
+    /**
+     * 하나의 주제 보이기
+     */
     override fun showTopic(topic: Topic) {
         parentFragmentManager.commit {
             setReorderingAllowed(true)
@@ -164,20 +186,36 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
         }
     }
 
-    override fun showError(tag: String, message: String?) {
-        val handler = Handler(Looper.getMainLooper())
+    /**
+     * 비어있는 화면 보이기
+     */
+    override fun showEmptyTopicList() {
+        showToast("초기화되었습니다.")
+        showTopics()
+    }
 
-        if (tag == "TOPIC_DELETE") {
-            handler.postDelayed(Runnable {
-                Toast.makeText(topicListContext, "삭제하는 과정에서 오류가 발생하였습니다.", Toast.LENGTH_SHORT)
-                    .show()
-            }, 0)
-        } else if (tag == "TOPIC_INSERT") {
-            handler.postDelayed(Runnable {
-                Toast.makeText(topicListContext, "저장하는 과정에서 오류가 발생하였습니다.", Toast.LENGTH_SHORT)
-                    .show()
-            }, 0)
+    override fun showError(tag: String, message: String?) {
+        if (handler == null) {
+            handler = Handler(Looper.getMainLooper())
         }
+
+        handler?.let {
+            if (tag == "TOPIC_DELETE") {
+                it.postDelayed(Runnable { printToast(message = "삭제하는 과정에서 오류가 발생하였습니다.") }, 0)
+            } else if (tag == "TOPIC_INSERT") {
+                it.postDelayed(Runnable { printToast(message = "저장하는 과정에서 오류가 발생하였습니다.") }, 0)
+            } else if (tag == "THINK_LIST_SIZE") {
+                it.postDelayed(Runnable { printToast(message = "목록을 불러오는 과정에서 오류가 발생하였습니다") }, 0)
+            } else if (tag == "THINK_ALL_DELETE" || tag == "TOPIC_ALL_DELETE") {
+                it.postDelayed(Runnable { printToast(message = "초기화 과정에서 오류가 발생하였습니다") }, 0)
+            } else if (tag == R.string.tag_topic_list_empty.toString()) {
+                it.postDelayed(Runnable { printToast(message = message) }, 0)
+            } else {
+
+            }
+        }
+
+        handler = null
     }
 
     override fun showToast(message: String?) {
@@ -186,5 +224,11 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
             Toast.makeText(topicListContext, message, Toast.LENGTH_SHORT).show()
         }, 0)
         showTopics()
+    }
+
+
+    private fun printToast(message: String?) {
+        Toast.makeText(topicListContext, message, Toast.LENGTH_SHORT)
+            .show()
     }
 }

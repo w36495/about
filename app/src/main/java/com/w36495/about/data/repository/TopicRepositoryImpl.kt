@@ -17,6 +17,11 @@ class TopicRepositoryImpl(private val topicDao: TopicDao) : TopicRepository {
         emit(topics)
     }
 
+    override suspend fun getTopicListCount(): Flow<Int> = flow {
+        val count = topicDao.getTopicListCount()
+        emit(count)
+    }
+
     override suspend fun saveTopic(topic: Topic): Flow<String> = flow {
         val topic = topicDao.insertTopic(topic)
         emit(topic.toString())
@@ -25,5 +30,10 @@ class TopicRepositoryImpl(private val topicDao: TopicDao) : TopicRepository {
     override suspend fun deleteTopicById(topicId: Long): Flow<String> = flow {
         val topic = topicDao.deleteTopicById(topicId)
         emit(topic.toString())
+    }
+
+    override suspend fun deleteAllTopic(): Flow<String> = flow {
+        val result = topicDao.deleteAllTopic()
+        emit(result.toString())
     }
 }

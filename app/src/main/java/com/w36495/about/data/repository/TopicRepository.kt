@@ -9,8 +9,12 @@ interface TopicRepository {
 
     suspend fun getTopicList(): Flow<List<Topic>>
 
+    suspend fun getTopicListCount(): Flow<Int>
+
     suspend fun saveTopic(topic: Topic): Flow<String>
 
     suspend fun deleteTopicById(topicId: Long): Flow<String>
+
+    suspend fun deleteAllTopic(): Flow<String>
 
 }
