@@ -175,14 +175,16 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
     }
 
     override fun showThink(think: Think) {
-        currentThink = think
-        position?.let {
-            val moveThinkUpdateIntent = Intent(thinkListContext, ThinkDialogActivity::class.java)
-            moveThinkUpdateIntent.putExtra("tag", DIALOG_UPDATE_TAG)
-            moveThinkUpdateIntent.putExtra("position", it)
-            moveThinkUpdateIntent.putExtra("think", think.text)
-            getResultThink.launch(moveThinkUpdateIntent)
-        }
+//        currentThink = think
+//        position?.let {
+//            val moveThinkUpdateIntent = Intent(thinkListContext, ThinkDialogActivity::class.java)
+//            moveThinkUpdateIntent.putExtra("tag", DIALOG_UPDATE_TAG)
+//            moveThinkUpdateIntent.putExtra("position", it)
+//            moveThinkUpdateIntent.putExtra("think", think.text)
+//            getResultThink.launch(moveThinkUpdateIntent)
+//        }
+        val commentFragment = CommentFragment()
+        commentFragment.show(parentFragmentManager, "Comment")
     }
 
     override fun showToast(message: String) {
