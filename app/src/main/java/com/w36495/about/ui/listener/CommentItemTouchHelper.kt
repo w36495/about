@@ -1,5 +1,6 @@
 package com.w36495.about.ui.listener
 
+
 import android.graphics.Canvas
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
@@ -44,33 +45,33 @@ class CommentItemTouchHelper : ItemTouchHelper.Callback() {
         limitScrollX = (viewHolder as CommentListHolder).getWidthOfContainer()
 
         if (actionState == ACTION_STATE_SWIPE) {
+
             if (dX == 0f) {
                 currentScrollX = viewHolder.itemView.scrollX
                 firstInActive = true
             }
 
             if (isCurrentlyActive) {
-                var scrollOffset = currentScrollX + (-dX).toInt()
+                var scrollOffset = currentScrollX + (dX).toInt()
                 if (scrollOffset > limitScrollX) {
                     scrollOffset = limitScrollX
                 } else if (scrollOffset < 0) {
                     scrollOffset = 0
                 }
+                viewHolder.itemView.scrollTo(scrollOffset * (-1), 0)
+            }
+        } else {
+            if (firstInActive) {
+                firstInActive = false
+                currentScrollXWhenInActive = viewHolder.itemView.scrollX
+                initXWhenInActive = dX
+            }
 
-                viewHolder.itemView.scrollTo(scrollOffset, 0)
-            } else {
-                if (firstInActive) {
-                    firstInActive = false
-                    currentScrollXWhenInActive = viewHolder.itemView.scrollX
-                    initXWhenInActive = dX
-                }
-
-                if (viewHolder.itemView.scrollX < limitScrollX!!) {
-                    viewHolder.itemView.scrollTo(
-                        (currentScrollXWhenInActive * dX / initXWhenInActive).toInt(),
-                        0
-                    )
-                }
+            if (viewHolder.itemView.scrollX < limitScrollX) {
+                viewHolder.itemView.scrollTo(
+                    (currentScrollXWhenInActive * dX / initXWhenInActive).toInt(),
+                    0
+                )
             }
         }
     }
@@ -78,9 +79,11 @@ class CommentItemTouchHelper : ItemTouchHelper.Callback() {
     override fun clearView(recyclerView: RecyclerView, viewHolder: ViewHolder) {
         super.clearView(recyclerView, viewHolder)
 
-        if (viewHolder.itemView.scrollX > limitScrollX!!) {
-            viewHolder.itemView.scrollTo(limitScrollX!!, 0)
-        } else if (viewHolder.itemView.scrollX < 0) {
+        val currentScrollX = viewHolder.itemView.scrollX * (-1)
+
+        if (currentScrollX > limitScrollX) {
+            viewHolder.itemView.scrollTo(limitScrollX * (-1), 0)
+        } else if (currentScrollX < 0) {
             viewHolder.itemView.scrollTo(0, 0)
         }
     }
