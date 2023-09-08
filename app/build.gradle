@@ -30,6 +30,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -45,6 +49,8 @@ dependencies {
 
     // Splash Screen API
     implementation 'androidx.core:core-splashscreen:1.0.0'
+
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'     // coordinatorlayout
 
     // Room Database
     implementation("androidx.room:room-ktx:2.4.3")
