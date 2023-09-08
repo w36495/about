@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.w36495.about.ui.adapter.CommentListHolder
+import com.w36495.about.ui.adapter.CommentListViewHolder
 
 class CommentItemTouchHelper : ItemTouchHelper.Callback() {
 
@@ -42,7 +42,7 @@ class CommentItemTouchHelper : ItemTouchHelper.Callback() {
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        limitScrollX = (viewHolder as CommentListHolder).getWidthOfContainer()
+        limitScrollX = (viewHolder as CommentListViewHolder).getWidthOfContainer()
 
         if (actionState == ACTION_STATE_SWIPE) {
 
