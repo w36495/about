@@ -16,6 +16,16 @@
     <color name="about_navy">#4B0082</color>
     <color name="about_purple">#800080</color>
 
+    <color name="about_primary_color1">#E6DFFF</color>
+    <color name="about_primary_color2">#CDBFFF</color>
+    <color name="about_primary_color3">#B3A0FF</color>
+    <color name="about_primary_color4">#9E88FF</color>
+    <color name="about_primary_color5">#7B61FF</color>
+    <color name="about_primary_color6">#5C46DB</color>
+    <color name="about_primary_color7">#4230B7</color>
+    <color name="about_primary_color8">#2C1E93</color>
+    <color name="about_primary_color9">#1C127A</color>
+
     <color name="about_grey1">#F9F9F9</color>
     <color name="about_grey2">#E0E0E0</color>
     <color name="about_grey3">#C6C6C6</color>

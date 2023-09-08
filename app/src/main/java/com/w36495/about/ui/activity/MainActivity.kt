@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.commit
 import com.w36495.about.R
 import com.w36495.about.ui.fragment.TopicListFragment
 
@@ -17,17 +18,19 @@ class MainActivity : AppCompatActivity() {
 
         initSplashScreen()
         setContentView(R.layout.activity_main)
-        initView()
+        initView(savedInstanceState)
     }
 
     private fun initSplashScreen() {
         splashScreen = installSplashScreen()
     }
 
-    private fun initView() {
-        supportFragmentManager.beginTransaction()
-            .addToBackStack(TOPIC_LIST_TAG)
-            .replace(R.id.main_fragment_container, TopicListFragment())
-            .commit()
+    private fun initView(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) {
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                add(R.id.main_fragment_container, TopicListFragment())
+            }
+        }
     }
 }

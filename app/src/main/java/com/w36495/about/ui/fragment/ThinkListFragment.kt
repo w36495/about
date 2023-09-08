@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,8 +24,9 @@ import com.w36495.about.R
 import com.w36495.about.ui.adapter.ThinkListAdapter
 import com.w36495.about.domain.entity.Think
 import com.w36495.about.contract.ThinkContract
+import com.w36495.about.contract.ThinkListContract
 import com.w36495.about.data.ThinkUiState
-import com.w36495.about.ui.presenter.ThinkPresenter
+import com.w36495.about.ui.presenter.ThinkListPresenter
 import com.w36495.about.domain.entity.Topic
 import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.data.repository.ThinkRepositoryImpl
@@ -35,13 +37,15 @@ import com.w36495.about.util.DateFormat
 import kotlinx.coroutines.launch
 
 class ThinkListFragment(private val topic: Topic) : Fragment(),
-    ThinkSwipeListener, ThinkListItemClickListener, ThinkContract.View {
+    ThinkSwipeListener, ThinkListItemClickListener, ThinkListContract.View {
 
     private lateinit var thinkListContext: Context
+    private lateinit var thinkListView: View
 
     companion object {
         const val DIALOG_ADD_TAG: String = "THINK_ADD_TAG"
         const val DIALOG_UPDATE_TAG: String = "THINK_UPDATE_TAG"
+        const val THINK_DETAIL_TAG: String = "THINK_DETAIL_FRAGMENT"
 
         const val DIALOG_ADD_RESULT_CODE: Int = 999
         const val DIALOG_UPDATE_RESULT_CODE: Int = 888
@@ -55,7 +59,7 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
     private lateinit var itemSwipeHelper: ItemSwipeHelper
 
     private var database: AppDatabase? = null
-    private lateinit var presenter: ThinkContract.Presenter
+    private lateinit var presenter: ThinkListContract.Presenter
 
     private var position: Int? = null
     private var currentThink: Think? = null
@@ -73,12 +77,13 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         thinkListContext = view.context
+        thinkListView = view
 
         database = AppDatabase.getInstance(view.context)
 
         toolbar = view.findViewById(R.id.think_list_toolbar)
         recyclerView = view.findViewById(R.id.think_list_recyclerview)
-        presenter = ThinkPresenter(ThinkRepositoryImpl(database!!.thinkDao()), this)
+        presenter = ThinkListPresenter(ThinkRepositoryImpl(database!!.thinkDao()), this)
 
         toolbar.title = topic.topic
 
@@ -103,7 +108,7 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
                         registDate = DateFormat.currentDateFormat(),
                         updateDate = DateFormat.currentDateFormat()
                     )
-                    (presenter as ThinkPresenter).saveThink(think)
+                    (presenter as ThinkListPresenter).saveThink(think)
                 }
             } else if (result.resultCode == DIALOG_UPDATE_RESULT_CODE) {
                 result.data?.let { intent ->
@@ -111,7 +116,7 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
                         think.text = intent.getStringExtra("think")!!
                         think.updateDate = DateFormat.currentDateFormat()
                     }
-                    (presenter as ThinkPresenter).updateThink(currentThink!!)
+                    (presenter as ThinkListPresenter).updateThink(currentThink!!)
                 }
             } else {
                 println("===== getResultThink - Failed =====")
@@ -142,7 +147,7 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
         presenter.getThinkList(topic.id)
 
         lifecycleScope.launch {
-            (presenter as ThinkPresenter).uiState.collect { uiState ->
+            (presenter as ThinkListPresenter).uiState.collect { uiState ->
                 when (uiState) {
                     is ThinkUiState.Loading -> {
                         println("===== loading =====")
@@ -176,13 +181,22 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
 
     override fun showThink(think: Think) {
         currentThink = think
+//        position?.let {
+//            val moveThinkUpdateIntent = Intent(thinkListContext, ThinkDialogActivity::class.java)
+//            moveThinkUpdateIntent.putExtra("tag", DIALOG_UPDATE_TAG)
+//            moveThinkUpdateIntent.putExtra("position", it)
+//            moveThinkUpdateIntent.putExtra("think", think.text)
+//            getResultThink.launch(moveThinkUpdateIntent)
+//        }
+
         position?.let {
-            val moveThinkUpdateIntent = Intent(thinkListContext, ThinkDialogActivity::class.java)
-            moveThinkUpdateIntent.putExtra("tag", DIALOG_UPDATE_TAG)
-            moveThinkUpdateIntent.putExtra("position", it)
-            moveThinkUpdateIntent.putExtra("think", think.text)
-            getResultThink.launch(moveThinkUpdateIntent)
+            parentFragmentManager.commit {
+                setReorderingAllowed(true)
+                addToBackStack(THINK_DETAIL_TAG)
+                replace(R.id.main_fragment_container, ThinkFragment(it+1, think))
+            }
         }
+
     }
 
     override fun showToast(message: String) {

@@ -30,7 +30,7 @@
             android:layout_marginHorizontal="30dp"
             android:layout_marginTop="24dp"
             android:backgroundTint="@color/about_grey3"
-            android:hint="@string/dialog_think_hint"
+            android:hint="@string/hint_think_dialog"
             android:maxLines="5"
             android:textColor="@color/black"
             android:textColorHint="@color/about_grey5"

@@ -30,7 +30,7 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="24dp"
             android:backgroundTint="@color/about_grey3"
-            android:hint="@string/dialog_topic_hint"
+            android:hint="@string/hint_topic_dialog"
             android:maxLines="1"
             android:minHeight="48dp"
             android:singleLine="true"
