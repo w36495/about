@@ -25,9 +25,6 @@
         </activity>
         <activity android:name=".ui.dialog.TopicDialogActivity" android:theme="@style/AboutTheme.Dialog" />
         <activity android:name=".ui.dialog.ThinkDialogActivity" android:theme="@style/AboutTheme.Dialog" />
-        <activity
-            android:name=".ui.activity.SettingActivity"
-            android:theme="@style/AboutTheme"/>
     </application>
 
 </manifest>
