@@ -4,24 +4,25 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.w36495.about.domain.entity.Topic
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TopicDao{
     @Query("SELECT * FROM topics")
-    suspend fun getTopics(): List<Topic>
+    fun getTopics(): Flow<List<Topic>>
 
     @Query("SELECT * FROM topics WHERE id = :topicId")
-    suspend fun getTopicById(topicId: Long): Topic
+    fun getTopicById(topicId: Long): Topic
 
     @Insert
-    suspend fun insertTopic(topic: Topic)
+    fun insertTopic(topic: Topic)
 
     @Query("DELETE FROM topics WHERE id = :topicId")
-    suspend fun deleteTopicById(topicId: Long)
+    fun deleteTopicById(topicId: Long): Int
 
     @Query("DELETE FROM topics")
-    suspend fun deleteAllTopic()
+    fun deleteAllTopic(): Int
 
     @Query("SELECT count(*) FROM topics")
-    suspend fun getTopicListCount(): Int
+    fun getTopicListCount(): Int
 }

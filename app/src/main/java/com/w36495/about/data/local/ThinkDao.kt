@@ -2,33 +2,34 @@ package com.w36495.about.data.local
 
 import androidx.room.*
 import com.w36495.about.domain.entity.Think
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ThinkDao {
     @Query("SELECT * FROM thinks WHERE topicId = :topicId")
-    suspend fun getThinkListByTopicId(topicId: Long): List<Think>
+    fun getThinkListByTopicId(topicId: Long): List<Think>
 
     @Query("SELECT * FROM thinks WHERE id = :thinkId")
-    suspend fun getThinkById(thinkId: Long): Think
+    fun getThinkById(thinkId: Long): Flow<Think>
 
     @Query("SELECT count(*) FROM thinks WHERE topicId = :topicId")
-    suspend fun getThinkListSizeByTopicId(topicId: Long): Int
+    fun getThinkListSizeByTopicId(topicId: Long): Int
 
     @Update
-    suspend fun updateThink(think: Think)
+    fun updateThink(think: Think)
 
     @Insert
-    suspend fun insertThink(think: Think)
+    fun insertThink(think: Think)
 
     @Query("DELETE FROM thinks WHERE topicId = :topicId")
-    suspend fun deleteThinkByTopicId(topicId: Long)
+    fun deleteThinkByTopicId(topicId: Long)
 
     @Query("DELETE FROM thinks WHERE id = :thinkId")
-    suspend fun deleteThinkById(thinkId: Long)
+    fun deleteThinkById(thinkId: Long)
 
     @Query("DELETE FROM thinks")
-    suspend fun deleteAllThinks()
+    fun deleteAllThinks()
 
     @Query("SELECT count(*) FROM thinks")
-    suspend fun getThinkListCount(): Int
+    fun getThinkListCount(): Int
 }
