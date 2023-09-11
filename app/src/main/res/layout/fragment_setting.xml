@@ -17,7 +17,6 @@
             android:id="@+id/setting_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_baseline_navigate_before_24"
             app:title="설정"
             app:titleCentered="true" />
     </com.google.android.material.appbar.AppBarLayout>
