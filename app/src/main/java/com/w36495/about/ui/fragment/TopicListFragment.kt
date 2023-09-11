@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,12 +28,12 @@ import com.w36495.about.ui.presenter.TopicPresenter
 import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.data.repository.ThinkRepositoryImpl
 import com.w36495.about.data.repository.TopicRepositoryImpl
-import com.w36495.about.ui.activity.SettingActivity
 import com.w36495.about.ui.dialog.TopicDialogActivity
+import com.w36495.about.ui.listener.ResetClickListener
 import com.w36495.about.ui.listener.TopicListClickListener
 import kotlinx.coroutines.launch
 
-class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View {
+class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View, ResetClickListener {
 
     private lateinit var topicListContext: Context
     private var database: AppDatabase? = null
@@ -41,7 +42,6 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
 
     companion object {
         val INTENT_RESULT_TOPIC: Int = 100
-        val INTENT_RESULT_RESET: Int = 101
     }
 
     private lateinit var recyclerView: RecyclerView
@@ -81,8 +81,6 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
                     )
                     (presenter as TopicPresenter).saveTopic(topic)
                 }
-            } else if (result.resultCode == INTENT_RESULT_RESET) {
-                presenter.deleteAllTopic()
             } else {
                 println("===== getResultTopic - Failed =====")
             }
@@ -122,8 +120,14 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
         }
 
         toolbar.setNavigationOnClickListener {
-            val moveSettingActivity = Intent(topicListContext, SettingActivity::class.java)
-            getResultTopic.launch(moveSettingActivity)
+            val settingFragment = SettingFragment()
+            settingFragment.setOnResetClickListener(this)
+
+            parentFragmentManager.commit {
+                replace(R.id.main_fragment_container, settingFragment)
+                setReorderingAllowed(true)
+                addToBackStack(THINK_LIST_TAG)
+            }
         }
 
         showTopics()
@@ -230,5 +234,15 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
     private fun printToast(message: String?) {
         Toast.makeText(topicListContext, message, Toast.LENGTH_SHORT)
             .show()
+    }
+
+    override fun onResetClicked() {
+        presenter.deleteAllTopic()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        database = null
+        handler = null
     }
 }
