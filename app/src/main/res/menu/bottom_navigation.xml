@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_topicList_fragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_cloud_queue_24"
+        android:title="@string/nav_title_topic" />
+
+    <item
+        android:id="@+id/nav_setting_fragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/nav_title_setting" />
+
+</menu>
