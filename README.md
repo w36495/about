@@ -36,6 +36,7 @@ https://play.google.com/store/apps/details?id=com.w36495.about
 - Coroutine + Flow
 - viewBinding
 - Room Database
+- Jetpack Navigation
 </br>
 
 ### 데이터흐름
@@ -83,3 +84,12 @@ https://play.google.com/store/apps/details?id=com.w36495.about
 ![코멘트삭제](https://github.com/w36495/about/assets/52291662/5be8a6d1-5172-4740-8968-130a452c2aec)
 - 오른쪽으로 스와이프하여 삭제 버튼 표시
 - 삭제 버튼 클릭 시, 보여지는 하단 다이얼로그를 통해 삭제 가능
+</br>
+
+### Trouble Shooting
+
+</br>
+
+### 학습한 내용
+
+**[1) MVP 디자인 패턴에서 View 와 Presenter 가 1:1 로 대응되어야 하는 이유](https://w36495.tistory.com/97)**
