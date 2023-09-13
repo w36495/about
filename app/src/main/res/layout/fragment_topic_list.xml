@@ -15,7 +15,6 @@
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways"
             app:menu="@menu/dialog_top_add_menu"
-            app:navigationIcon="@drawable/ic_baseline_settings_24"
             app:title="@string/app_name"
             app:titleCentered="true" />
 

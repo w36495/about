@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_topicList_fragment">
+
+    <fragment
+        android:id="@+id/nav_topicList_fragment"
+        android:name="com.w36495.about.ui.fragment.TopicListFragment"
+        android:label="@string/nav_label_topicList"
+        tools:layout="@layout/fragment_topic_list">
+        <action
+            android:id="@+id/action_nav_topicList_fragment_to_thinkListFragment"
+            app:destination="@id/nav_thinkList_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_setting_fragment"
+        android:name="com.w36495.about.ui.fragment.SettingFragment"
+        android:label="@string/nav_label_setting"
+        tools:layout="@layout/fragment_setting" />
+
+    <fragment
+        android:id="@+id/nav_thinkList_fragment"
+        android:name="com.w36495.about.ui.fragment.ThinkListFragment"
+        android:label="@string/nav_label_thinkList">
+        <action
+            android:id="@+id/action_thinkListFragment_to_thinkFragment"
+            app:destination="@id/nav_think_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_think_fragment"
+        android:name="com.w36495.about.ui.fragment.ThinkFragment"
+        android:label="@string/nav_label_think" />
+
+</navigation>

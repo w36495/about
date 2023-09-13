@@ -4,33 +4,42 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.fragment.app.commit
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.w36495.about.R
-import com.w36495.about.ui.fragment.TopicListFragment
+import com.w36495.about.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private val TOPIC_LIST_TAG: String = "TOPIC_LIST_FRAGMENT"
+    private var _binding: ActivityMainBinding? = null
+    private val binding: ActivityMainBinding get() = _binding!!
+
     private lateinit var splashScreen: SplashScreen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initSplashScreen()
-        setContentView(R.layout.activity_main)
-        initView(savedInstanceState)
+
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setupBottomNavigation()
     }
 
     private fun initSplashScreen() {
         splashScreen = installSplashScreen()
     }
 
-    private fun initView(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null) {
-            supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                add(R.id.main_fragment_container, TopicListFragment())
-            }
-        }
+    private fun setupBottomNavigation() {
+        val navHost = supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
+        val navController = navHost.navController
+
+        binding.mainBottomNavigation.setupWithNavController(navController)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }
