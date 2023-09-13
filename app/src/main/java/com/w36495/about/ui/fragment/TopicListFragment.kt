@@ -119,17 +119,6 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
             }
         }
 
-        toolbar.setNavigationOnClickListener {
-            val settingFragment = SettingFragment()
-            settingFragment.setOnResetClickListener(this)
-
-            parentFragmentManager.commit {
-                replace(R.id.main_fragment_container, settingFragment)
-                setReorderingAllowed(true)
-                addToBackStack(THINK_LIST_TAG)
-            }
-        }
-
         showTopics()
     }
 
