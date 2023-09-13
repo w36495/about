@@ -1,31 +1,36 @@
 <resources>
     <string name="app_name">About</string>
 
+    <!-- title -->
     <string name="title_topic">주제</string>
     <string name="title_topic_add">주제등록</string>
     <string name="title_think_add">생각등록</string>
 
+    <!-- text -->
     <string name="text_date_prefix">생각</string>
     <string name="text_date_suffix">일 째</string>
     <string name="text_empty_comment">코멘트가 존재하지 않습니다.</string>
 
+    <!-- button -->
     <string name="button_save">등록</string>
 
+    <!-- menu -->
     <string name="menu_title_add">add</string>
     <string name="menu_title_close">close</string>
     <string name="menu_title_more">more</string>
+    <string name="menu_setting_reset">초기화</string>
 
+    <!-- dialog -->
     <string name="dialog_btn_save">저장</string>
     <string name="dialog_btn_cancel">취소</string>
     <string name="dialog_btn_delete">삭제</string>
+    <string name="dialog_btn_check">확인</string>
     <string name="dialog_title_delete">삭제하시겠습니까?</string>
     <string name="dialog_message_delete">개의 생각들도 함께 삭제됩니다.</string>
-
-    <string name="menu_setting_reset">초기화</string>
-    <string name="dialog_btn_check">확인</string>
     <string name="dialog_reset_text">저장된 주제와 생각들이 모두 삭제되며, 복구가 불가능합니다.</string>
     <string name="dialog_reset_title">초기화를 진행하시겠습니까?</string>
 
+    <!-- tag of topic -->
     <string name="tag_topic_insert">TOPIC_INSERT</string>
     <string name="tag_topic_update">TOPIC_UPDATE</string>
     <string name="tag_topic_delete">TOPIC_DELETE</string>
@@ -33,6 +38,7 @@
     <string name="tag_topic_list_size">TOPIC_LIST_SIZE</string>
     <string name="tag_topic_list_empty">TOPIC_LIST_EMPTY</string>
 
+    <!-- tag of think -->
     <string name="tag_think_insert">THINK_INSERT</string>
     <string name="tag_think_update">THINK_UPDATE</string>
     <string name="tag_think_delete">THINK_DELETE</string>
@@ -40,8 +46,17 @@
     <string name="tag_think_list_size">THINK_LIST_SIZE</string>
     <string name="tag_think_list_empty">THINK_LIST_EMPTY</string>
 
+    <!-- hint -->
     <string name="hint_comment_input">코멘트를 작성해보세요.</string>
     <string name="hint_topic_dialog">주제 입력</string>
     <string name="hint_think_dialog">생각 입력</string>
+
+    <!-- navigation -->
+    <string name="nav_title_topic">주제</string>
+    <string name="nav_title_setting">설정</string>
+    <string name="nav_label_topicList">fragment_topicList</string>
+    <string name="nav_label_setting">fragment_setting</string>
+    <string name="nav_label_thinkList">fragment_thinkList</string>
+    <string name="nav_label_think">fragment_think</string>
 
 </resources>
