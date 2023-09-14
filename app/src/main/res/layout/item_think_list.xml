@@ -21,7 +21,7 @@
         android:id="@+id/think_list_item_vertical_divider"
         android:layout_width="1dp"
         android:layout_height="0dp"
-        android:background="@color/about_grey1"
+        android:background="@color/about_grey3"
         app:layout_constraintBottom_toBottomOf="@id/think_list_item_text"
         app:layout_constraintEnd_toStartOf="@id/think_list_item_text"
         app:layout_constraintStart_toEndOf="@id/think_list_item_number"
@@ -32,6 +32,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@id/think_list_item_horizontal_divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/think_list_item_vertical_divider"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,10 +41,33 @@
         android:id="@+id/think_list_item_horizontal_divider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:dividerColor="@color/about_grey1"
+        app:dividerColor="@color/about_grey3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/think_list_item_text" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/think_list_item_delete_container"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/about_red"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/think_list_item_horizontal_divider"
+        app:layout_constraintStart_toEndOf="@id/think_list_item_text"
+        app:layout_constraintTop_toTopOf="@id/think_list_item_text">
+
+        <TextView
+            android:id="@+id/think_list_item_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="삭제"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
