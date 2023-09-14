@@ -17,9 +17,8 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
-import com.w36495.about.ui.ItemSwipeHelper
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.w36495.about.ui.listener.ThinkItemTouchHelper
 import com.w36495.about.R
 import com.w36495.about.ui.adapter.ThinkListAdapter
 import com.w36495.about.domain.entity.Think
@@ -58,7 +57,7 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
     private lateinit var getResultThink: ActivityResultLauncher<Intent>
 
     private lateinit var thinkListAdapter: ThinkListAdapter
-    private lateinit var itemSwipeHelper: ItemSwipeHelper
+    private lateinit var thinkItemTouchHelper: ThinkItemTouchHelper
 
     private var database: AppDatabase? = null
     private lateinit var presenter: ThinkListContract.Presenter
@@ -91,9 +90,8 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
         thinkListAdapter = ThinkListAdapter()
         thinkListAdapter.setClickListener(this, this)
 
-        itemSwipeHelper = ItemSwipeHelper(thinkListAdapter)
-        val itemTouchHelper = ItemTouchHelper(itemSwipeHelper)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+        thinkItemTouchHelper = ThinkItemTouchHelper()
+        val itemTouchHelper = ItemTouchHelper(thinkItemTouchHelper)
 
         binding.thinkListRecyclerview.apply {
             adapter = thinkListAdapter
