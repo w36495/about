@@ -9,8 +9,9 @@ import com.w36495.about.domain.entity.Think
 import com.w36495.about.domain.entity.Topic
 
 @Database(
-    version = 2,
-    entities = [Topic::class, Think::class, Comment::class]
+    version = 3,
+    entities = [Topic::class, Think::class, Comment::class],
+    exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -36,6 +37,59 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    """
+                        DROP TABLE topics
+                    """.trimIndent()
+                )
+                database.execSQL(
+                    """
+                        DROP TABLE thinks
+                    """.trimIndent()
+                )
+                database.execSQL(
+                    """
+                        DROP TABLE comments
+                    """.trimIndent()
+                )
+                database.execSQL(
+                    """
+                        CREATE TABLE topics (
+                        id INTEGER PRIMARY KEY NOT NULL,
+                        topic TEXT NOT NULL,
+                        registDate TEXT NOT NULL,
+                        updateDate TEXT NOT NULL
+                        )
+                    """.trimIndent()
+                )
+                database.execSQL(
+                    """
+                        CREATE TABLE thinks (
+                        id INTEGER PRIMARY KEY NOT NULL,
+                        topicId INTEGER NOT NULL,
+                        think TEXT NOT NULL,
+                        registDate TEXT NOT NULL,
+                        updateDate TEXT NOT NULL,
+                        FOREIGN KEY (topicId) REFERENCES topics (id) ON DELETE CASCADE ON UPDATE CASCADE
+                        )
+                    """.trimIndent()
+                )
+                database.execSQL(
+                    """
+                        CREATE TABLE comments (
+                        id INTEGER PRIMARY KEY NOT NULL,
+                        thinkId INTEGER NOT NULL,
+                        comment TEXT NOT NULL,
+                        registDate TEXT NOT NULL,
+                        FOREIGN KEY (thinkId) REFERENCES thinks (id) ON DELETE CASCADE ON UPDATE CASCADE
+                        )
+                    """.trimIndent()
+                )
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase? {
             if (instance == null) {
                 synchronized(AppDatabase::class) {
@@ -46,6 +100,7 @@ abstract class AppDatabase : RoomDatabase() {
                     )
                         .setJournalMode(JournalMode.TRUNCATE)
                         .addMigrations(MIGRATION_1_2)
+                        .addMigrations(MIGRATION_2_3)
                         .build()
                 }
             }
