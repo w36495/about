@@ -30,6 +30,7 @@ import com.w36495.about.ui.presenter.ThinkListPresenter
 import com.w36495.about.domain.entity.Topic
 import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.data.repository.ThinkRepositoryImpl
+import com.w36495.about.databinding.FragmentThinkListBinding
 import com.w36495.about.ui.dialog.ThinkDialogActivity
 import com.w36495.about.ui.listener.ThinkListItemClickListener
 import com.w36495.about.ui.listener.ThinkSwipeListener
@@ -38,6 +39,9 @@ import kotlinx.coroutines.launch
 
 class ThinkListFragment(private val topic: Topic) : Fragment(),
     ThinkSwipeListener, ThinkListItemClickListener, ThinkListContract.View {
+
+    private var _binding: FragmentThinkListBinding? = null
+    private val binding: FragmentThinkListBinding get() = _binding!!
 
     private lateinit var thinkListContext: Context
     private lateinit var thinkListView: View
@@ -53,8 +57,6 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
 
     private lateinit var getResultThink: ActivityResultLauncher<Intent>
 
-    private lateinit var toolbar: MaterialToolbar
-    private lateinit var recyclerView: RecyclerView
     private lateinit var thinkListAdapter: ThinkListAdapter
     private lateinit var itemSwipeHelper: ItemSwipeHelper
 
@@ -71,7 +73,8 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_think_list, container, false)
+        _binding = FragmentThinkListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,11 +84,9 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
 
         database = AppDatabase.getInstance(view.context)
 
-        toolbar = view.findViewById(R.id.think_list_toolbar)
-        recyclerView = view.findViewById(R.id.think_list_recyclerview)
         presenter = ThinkListPresenter(ThinkRepositoryImpl(database!!.thinkDao()), this)
 
-        toolbar.title = topic.topic
+        binding.thinkListToolbar.title = topic.topic
 
         thinkListAdapter = ThinkListAdapter()
         thinkListAdapter.setClickListener(this, this)
@@ -94,8 +95,16 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
         val itemTouchHelper = ItemTouchHelper(itemSwipeHelper)
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
-        recyclerView.adapter = thinkListAdapter
-        recyclerView.layoutManager = LinearLayoutManager(view.context)
+        binding.thinkListRecyclerview.apply {
+            adapter = thinkListAdapter
+            layoutManager = LinearLayoutManager(view.context)
+
+            itemTouchHelper.attachToRecyclerView(this)
+            setOnTouchListener { _, _ ->
+                thinkItemTouchHelper.removePreviousSwipe(this)
+                false
+            }
+        }
 
         getResultThink = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -123,7 +132,7 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
             }
         }
 
-        toolbar.setOnMenuItemClickListener { menu ->
+        binding.thinkListToolbar.setOnMenuItemClickListener { menu ->
             when (menu.itemId) {
                 R.id.main_add -> {
                     val moveThinkAddIntent =
@@ -136,7 +145,7 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
             }
         }
 
-        toolbar.setNavigationOnClickListener {
+        binding.thinkListToolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
@@ -212,5 +221,10 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
         handler.postDelayed(Runnable {
             Toast.makeText(thinkListContext, message, Toast.LENGTH_SHORT).show()
         }, 0)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
