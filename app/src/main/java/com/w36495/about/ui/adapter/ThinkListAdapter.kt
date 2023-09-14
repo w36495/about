@@ -1,14 +1,10 @@
 package com.w36495.about.ui.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.w36495.about.databinding.ItemThinkListBinding
 import com.w36495.about.domain.entity.Think
-import com.w36495.about.ui.listener.ItemSwipeListener
 import com.w36495.about.ui.listener.ThinkListItemClickListener
 import com.w36495.about.ui.listener.ThinkSwipeListener
 
@@ -43,10 +39,6 @@ class ThinkListAdapter : RecyclerView.Adapter<ThinkListViewHolder>() {
     fun addThink(think: Think) {
         thinkList.add(think)
         notifyDataSetChanged()
-    }
-
-    override fun onItemSwiped(position: Int) {
-        thinkSwipeListener.onThinkSwiped(thinkList[position].id)
     }
 
     fun setThinkList(thinkList: List<Think>) {

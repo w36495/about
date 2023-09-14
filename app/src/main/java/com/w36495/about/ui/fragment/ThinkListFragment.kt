@@ -2,7 +2,6 @@ package com.w36495.about.ui.fragment
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Point
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -22,7 +21,6 @@ import com.w36495.about.ui.listener.ThinkItemTouchHelper
 import com.w36495.about.R
 import com.w36495.about.ui.adapter.ThinkListAdapter
 import com.w36495.about.domain.entity.Think
-import com.w36495.about.contract.ThinkContract
 import com.w36495.about.contract.ThinkListContract
 import com.w36495.about.data.ThinkUiState
 import com.w36495.about.ui.presenter.ThinkListPresenter
@@ -64,8 +62,6 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
 
     private var position: Int? = null
     private var currentThink: Think? = null
-
-    private val size = Point()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -199,13 +195,6 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
 
     override fun showThink(think: Think) {
         currentThink = think
-//        position?.let {
-//            val moveThinkUpdateIntent = Intent(thinkListContext, ThinkDialogActivity::class.java)
-//            moveThinkUpdateIntent.putExtra("tag", DIALOG_UPDATE_TAG)
-//            moveThinkUpdateIntent.putExtra("position", it)
-//            moveThinkUpdateIntent.putExtra("think", think.text)
-//            getResultThink.launch(moveThinkUpdateIntent)
-//        }
 
         position?.let {
             parentFragmentManager.commit {
