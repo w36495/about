@@ -174,7 +174,18 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
     }
 
     override fun onThinkSwiped(thinkId: Long) {
-        presenter.deleteThinkById(thinkId)
+        thinkItemTouchHelper.removeSwipeAfterDelete(binding.thinkListRecyclerview)
+
+        MaterialAlertDialogBuilder(thinkListContext, R.style.AboutTheme_AlertDialog)
+            .setTitle(resources.getString(R.string.dialog_title_think_delete))
+            .setMessage(resources.getString(R.string.dialog_message_think_delete))
+            .setNeutralButton(resources.getString(R.string.dialog_btn_cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(resources.getString(R.string.dialog_btn_delete)) { dialog, _ ->
+                presenter.deleteThinkById(thinkId)
+            }
+            .show()
     }
 
     override fun onThinkListItemClicked(position: Int, think: Think) {
