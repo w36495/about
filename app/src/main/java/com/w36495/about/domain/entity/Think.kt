@@ -5,10 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "thinks")
 data class Think(
-    var topicId: Long,
-    var text: String,
+    @PrimaryKey
+    val id: Long = System.currentTimeMillis(),
+    val topicId: Long,
+    val think: String,
     val registDate: String,
-    var updateDate: String
-) {
-    @PrimaryKey(autoGenerate = true) var id: Long = 0
-}
+    val updateDate: String
+)

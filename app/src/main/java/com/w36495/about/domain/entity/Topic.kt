@@ -5,11 +5,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "topics")
 data class Topic(
+    @PrimaryKey
+    val id: Long = System.currentTimeMillis(),
     val topic: String,
-    val color: String,
-    val registDate: String
-) {
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0
-    var count: Int = 0
-}
+    val registDate: String,
+    val updateDate: String
+)
