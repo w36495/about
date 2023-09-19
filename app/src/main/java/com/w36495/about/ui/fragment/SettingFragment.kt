@@ -4,20 +4,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.w36495.about.R
+import com.w36495.about.contract.SettingContract
+import com.w36495.about.data.local.AppDatabase
+import com.w36495.about.data.repository.TopicRepositoryImpl
 import com.w36495.about.databinding.FragmentSettingBinding
-import com.w36495.about.ui.listener.ResetClickListener
+import com.w36495.about.ui.presenter.SettingPresenter
 
-class SettingFragment : Fragment() {
+class SettingFragment : Fragment(), SettingContract.View {
 
     private var _binding: FragmentSettingBinding? = null
     private val binding: FragmentSettingBinding get() = _binding!!
+    private var navController: NavController? = null
 
-    private var resetClickListener: ResetClickListener? = null
+    private var appDatabase: AppDatabase? = null
+    private lateinit var settingPresenter: SettingContract.Presenter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,35 +36,48 @@ class SettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupDatabase()
+        navController = view.findNavController()
+
         binding.settingResetLayout.setOnClickListener {
             showResetDialog(view)
         }
+    }
+
+    private fun setupDatabase() {
+        appDatabase = AppDatabase.getInstance(requireContext())
+        settingPresenter = SettingPresenter(TopicRepositoryImpl(appDatabase!!.topicDao()), this)
     }
 
     private fun showResetDialog(view: View) {
         MaterialAlertDialogBuilder(view.context)
             .setTitle(resources.getString(R.string.dialog_reset_title))
             .setMessage(resources.getString(R.string.dialog_reset_text))
-            .setNeutralButton(resources.getString(R.string.dialog_btn_cancel)) { _, _ -> }
+            .setNeutralButton(resources.getString(R.string.dialog_btn_cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
             .setPositiveButton(resources.getString(R.string.dialog_btn_check)) { _, _ ->
-                resetClickListener?.let {
-                    it.onResetClicked()
-                    parentFragmentManager.commit {
-                        replace<TopicListFragment>(R.id.main_fragment_container)
-                        setReorderingAllowed(true)
-                    }
+                settingPresenter.resetAllData()
+                navController?.let {
+                    it.navigate(R.id.nav_topicList_fragment)
                 }
             }
             .show()
     }
 
-    fun setOnResetClickListener(listener: ResetClickListener) {
-        this.resetClickListener = listener
+    override fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showErrorToast(tag: String, message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        resetClickListener = null
+        navController = null
+        appDatabase = null
     }
 }
