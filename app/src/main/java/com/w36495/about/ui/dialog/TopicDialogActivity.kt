@@ -16,9 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 import com.w36495.about.R
-import com.w36495.about.domain.entity.Topic
 import com.w36495.about.ui.fragment.TopicListFragment
-import com.w36495.about.util.DateFormat
 import com.w36495.about.util.StringFormat
 
 class TopicDialogActivity : AppCompatActivity(), View.OnClickListener {
@@ -28,13 +26,22 @@ class TopicDialogActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var saveButton: Button
     private lateinit var inputText: EditText
 
+    private var resultTopicFromIntent: String? = null
+    private var resultTopicIdFromIntent: Long? = null
+
     private val size = Point()
-    private var selectedColor: String = "#DCDCDC"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.activity_topic_dialog)
+
+        if (intent.extras?.get("tag") == TopicListFragment.TAG_TOPIC_UPDATE) {
+            intent.extras?.let {
+                resultTopicFromIntent = it.getString("topic")
+                resultTopicIdFromIntent = it.getLong("topicId")
+            }
+        }
 
         val windowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display = windowManager.defaultDisplay
@@ -62,6 +69,11 @@ class TopicDialogActivity : AppCompatActivity(), View.OnClickListener {
                 else -> false
             }
         }
+
+        resultTopicFromIntent?.let {
+            inputText.setText(it)
+            dialogToolbar.title = "주제 수정"
+        }
     }
 
     override fun onResume() {
@@ -76,16 +88,18 @@ class TopicDialogActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.activity_topic_add_btn_save -> {
-                val topic =
-                    Topic(inputText.text.toString(), selectedColor, DateFormat.currentDateFormat())
+                val topic = inputText.text
 
-                if (StringFormat.checkLengthOfTopic(topic.topic.length)) {
+                if (StringFormat.checkLengthOfTopic(topic.length)) {
                     val moveTopicList = Intent(this, TopicListFragment::class.java)
-                    moveTopicList.putExtra("topic", topic.topic)
-                    moveTopicList.putExtra("color", topic.color)
-                    moveTopicList.putExtra("date", topic.registDate)
-                    setResult(TopicListFragment.INTENT_RESULT_TOPIC, moveTopicList)
-                    finish()
+                    moveTopicList.putExtra("topic", topic)
+
+                    if (resultTopicIdFromIntent != null) {
+                        moveTopicList.putExtra("topicId", resultTopicIdFromIntent)
+                        setResult(TopicListFragment.INTENT_RESULT_TOPIC_UPDATE, moveTopicList)
+                    } else {
+                        setResult(TopicListFragment.INTENT_RESULT_TOPIC_INSERT, moveTopicList)
+                    }
                 } else {
                     Toast.makeText(this, "저장에 실패하였습니다.", Toast.LENGTH_SHORT).show()
                 }
