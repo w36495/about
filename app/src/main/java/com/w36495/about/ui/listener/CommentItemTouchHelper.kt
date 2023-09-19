@@ -16,6 +16,9 @@ class CommentItemTouchHelper : ItemTouchHelper.Callback() {
     private var initXWhenInActive = 0f
     private var firstInActive = false
 
+    private var currentPosition: Int? = null
+    private var previousPosition: Int? = null
+
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: ViewHolder
@@ -79,6 +82,8 @@ class CommentItemTouchHelper : ItemTouchHelper.Callback() {
     override fun clearView(recyclerView: RecyclerView, viewHolder: ViewHolder) {
         super.clearView(recyclerView, viewHolder)
 
+        previousPosition = viewHolder.adapterPosition
+
         val currentScrollX = viewHolder.itemView.scrollX * (-1)
 
         if (currentScrollX > limitScrollX) {
@@ -88,11 +93,39 @@ class CommentItemTouchHelper : ItemTouchHelper.Callback() {
         }
     }
 
+    override fun onSelectedChanged(viewHolder: ViewHolder?, actionState: Int) {
+        super.onSelectedChanged(viewHolder, actionState)
+
+        viewHolder?.let {
+            currentPosition = it.adapterPosition
+        }
+    }
+
     override fun getSwipeThreshold(viewHolder: ViewHolder): Float {
         return Integer.MAX_VALUE.toFloat()
     }
 
     override fun getSwipeEscapeVelocity(defaultValue: Float): Float {
         return Integer.MAX_VALUE.toFloat()
+    }
+
+    fun removePreviousSwipe(recyclerView: RecyclerView) {
+        if (previousPosition == currentPosition) {
+            return
+        } else {
+            previousPosition?.let {
+                val viewHolder = recyclerView.findViewHolderForAdapterPosition(it) ?: return
+                viewHolder.itemView.scrollTo(0, 0)
+                previousPosition = null
+            }
+        }
+    }
+
+    fun removeSwipeAfterDelete(recyclerView: RecyclerView) {
+        currentPosition?.let {
+            val viewHolder = recyclerView.findViewHolderForAdapterPosition(it) ?: return
+            viewHolder.itemView.scrollTo(0, 0)
+            currentPosition = null
+        }
     }
 }

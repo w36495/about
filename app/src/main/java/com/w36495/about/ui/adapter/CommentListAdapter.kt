@@ -24,7 +24,7 @@ class CommentListAdapter : RecyclerView.Adapter<CommentListViewHolder>() {
         }
 
         holder.onDeleteClick = {
-            commentItemClickListener.onItemClicked(commentList[it.adapterPosition].id)
+            commentItemClickListener.onClickItem(commentList[it.adapterPosition].id)
         }
     }
 

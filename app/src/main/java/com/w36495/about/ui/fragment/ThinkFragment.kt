@@ -101,6 +101,10 @@ class ThinkFragment(
             adapter = commentListAdapter
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            setOnTouchListener { _, _ ->
+                commentItemTouchHelper.removePreviousSwipe(this)
+                false
+            }
         }
 
         commentListAdapter.setOnCommentItemClickListener(this)
@@ -163,13 +167,14 @@ class ThinkFragment(
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onItemClicked(commentId: Long) {
+    override fun onClickItem(commentId: Long) {
         val commentBottomDialog = CommentBottomSheetDialogFragment(commentId)
         commentBottomDialog.setOnCommentItemDeleteListener(this)
         commentBottomDialog.show(parentFragmentManager, "COMMENT_BOTTOM_DIALOG")
     }
 
     override fun onDeleteItem(commentId: Long) {
+        commentItemTouchHelper.removeSwipeAfterDelete(binding.thinkRecyclerview)
         presenter.deleteComment(commentId)
     }
 
