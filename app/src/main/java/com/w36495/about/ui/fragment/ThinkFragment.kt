@@ -101,6 +101,10 @@ class ThinkFragment(
             adapter = commentListAdapter
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            setOnTouchListener { _, _ ->
+                commentItemTouchHelper.removePreviousSwipe(this)
+                false
+            }
         }
 
         commentListAdapter.setOnCommentItemClickListener(this)
@@ -170,6 +174,7 @@ class ThinkFragment(
     }
 
     override fun onDeleteItem(commentId: Long) {
+        commentItemTouchHelper.removeSwipeAfterDelete(binding.thinkRecyclerview)
         presenter.deleteComment(commentId)
     }
 
