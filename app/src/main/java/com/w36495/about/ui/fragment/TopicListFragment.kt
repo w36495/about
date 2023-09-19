@@ -1,6 +1,5 @@
 package com.w36495.about.ui.fragment
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -13,41 +12,41 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.w36495.about.R
 import com.w36495.about.ui.adapter.TopicListAdapter
 import com.w36495.about.domain.entity.Topic
-import com.w36495.about.contract.TopicContract
-import com.w36495.about.data.TopicUiState
+import com.w36495.about.contract.TopicListContract
+import com.w36495.about.data.TopicListUiState
 import com.w36495.about.ui.presenter.TopicPresenter
 import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.data.repository.ThinkRepositoryImpl
 import com.w36495.about.data.repository.TopicRepositoryImpl
+import com.w36495.about.databinding.FragmentTopicListBinding
+import com.w36495.about.domain.dto.TopicListDTO
 import com.w36495.about.ui.dialog.TopicDialogActivity
-import com.w36495.about.ui.listener.ResetClickListener
 import com.w36495.about.ui.listener.TopicListClickListener
+import com.w36495.about.util.DateFormat
 import kotlinx.coroutines.launch
 
-class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View, ResetClickListener {
+class TopicListFragment : Fragment(), TopicListClickListener, TopicListContract.View {
 
-    private lateinit var topicListContext: Context
+    private var _binding: FragmentTopicListBinding? = null
+    private val binding:FragmentTopicListBinding get() = _binding!!
     private var database: AppDatabase? = null
 
-    private val THINK_LIST_TAG: String = "THINK_LIST_FRAGMENT"
-
     companion object {
-        val INTENT_RESULT_TOPIC: Int = 100
+        const val INTENT_RESULT_TOPIC_INSERT: Int = 100
+        const val INTENT_RESULT_TOPIC_UPDATE = 101
+
+        const val TAG_THINK_LIST: String = "THINK_LIST_FRAGMENT"
+        const val TAG_TOPIC_UPDATE = "TAG_TOPIC_UPDATE"
     }
 
-    private lateinit var recyclerView: RecyclerView
     private lateinit var topicListAdapter: TopicListAdapter
-    private lateinit var toolbar: MaterialToolbar
-    private lateinit var presenter: TopicContract.Presenter
+    private lateinit var presenter: TopicListContract.Presenter
     private lateinit var getResultTopic: ActivityResultLauncher<Intent>
 
     private var handler: Handler? = null
@@ -57,7 +56,8 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_topic_list, container, false)
+        _binding = FragmentTopicListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,22 +67,26 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
     }
 
     private fun init(view: View) {
-        topicListContext = view.context
 
         getResultTopic = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
-            if (result.resultCode == INTENT_RESULT_TOPIC) {
+            if (result.resultCode == INTENT_RESULT_TOPIC_INSERT) {
                 result.data?.let {
                     val topic = Topic(
-                        it.getStringExtra("topic")!!,
-                        it.getStringExtra("color")!!,
-                        it.getStringExtra("date")!!
+                        topic = it.getCharSequenceExtra("topic").toString(),
+                        registDate = DateFormat.currentDateFormat(),
+                        updateDate = DateFormat.currentDateFormat()
                     )
                     (presenter as TopicPresenter).saveTopic(topic)
                 }
-            } else {
-                println("===== getResultTopic - Failed =====")
+            } else if (result.resultCode == INTENT_RESULT_TOPIC_UPDATE){
+                result.data?.let {
+                    val topicId = it.getLongExtra("topicId", -1)
+                    val topic = it.getCharSequenceExtra("topic").toString()
+
+                    presenter.updateTopic(topicId, topic, DateFormat.currentDateFormat())
+                }
             }
         }
 
@@ -92,14 +96,13 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
 
         database = AppDatabase.getInstance(view.context)
 
-        recyclerView = view.findViewById(R.id.topic_list_recyclerview)
-        toolbar = view.findViewById(R.id.topic_list_toolbar)
-
-        topicListAdapter = TopicListAdapter(topicListContext, colors)
+        topicListAdapter = TopicListAdapter()
         topicListAdapter.setClickListener(this)
 
-        recyclerView.adapter = topicListAdapter
-        recyclerView.layoutManager = LinearLayoutManager(topicListContext)
+        binding.topicListRecyclerview.apply {
+            adapter = topicListAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
 
         presenter = TopicPresenter(
             TopicRepositoryImpl(database!!.topicDao()),
@@ -107,7 +110,7 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
             this
         )
 
-        toolbar.setOnMenuItemClickListener { menu ->
+        binding.topicListToolbar.setOnMenuItemClickListener { menu ->
             when (menu.itemId) {
                 R.id.main_add -> {
                     val moveTopicDialogIntent =
@@ -126,111 +129,77 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicContract.View
         presenter.getTopicList()
 
         lifecycleScope.launch {
-            (presenter as TopicPresenter).uiState.collect { uiState ->
+            (presenter as TopicPresenter).topicListUiState.collect { uiState ->
                 when (uiState) {
-                    is TopicUiState.Loading -> {
-                        println("===== loading =====")
+                    is TopicListUiState.Loading -> {
+                        // TODO
                     }
-                    is TopicUiState.Empty -> {
-                        println("===== empty =====")
+                    is TopicListUiState.Empty -> {
                         topicListAdapter.setTopicEmptyList()
                     }
-                    is TopicUiState.Success -> {
-                        topicListAdapter.setTopicList(uiState.list)
+                    is TopicListUiState.Success -> {
+                        topicListAdapter.setTopicList(uiState.topicList)
                     }
-                    is TopicUiState.Failed -> {
-                        println("===== failed : ${uiState.message} =====")
+                    is TopicListUiState.Failed -> {
+                        // TODO
                     }
                 }
             }
         }
     }
 
-    override fun onTopicListItemClicked(topicId: Long) {
-        presenter.getTopic(topicId)
-    }
-
-    override fun onTopicDeleteClicked(topicId: Long, topic: Topic) {
-        MaterialAlertDialogBuilder(topicListContext, R.style.alert_dialog_delete_style)
-            .setTitle("주제 삭제")
-            .setMessage("${topic.topic}에 등록된 ${topic.count}개의 생각들도 함께 삭제되며 복구가 불가능합니다.\n정말 삭제하시겠습니까?")
-            .setNeutralButton("취소") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setPositiveButton("삭제") { _, _ ->
-                presenter.deleteThinkListByTopicId(topicId)
-                presenter.deleteTopicById(topicId)
-            }
-            .show()
-    }
-
-    override fun showTopicList(topicList: List<Topic>) {
-        topicListAdapter.setTopicList(topicList)
-    }
-
-    /**
-     * 하나의 주제 보이기
-     */
-    override fun showTopic(topic: Topic) {
+    override fun onClickItem(topic: TopicListDTO) {
         parentFragmentManager.commit {
             setReorderingAllowed(true)
-            addToBackStack(THINK_LIST_TAG)
+            addToBackStack(TAG_THINK_LIST)
             replace(R.id.main_fragment_container, ThinkListFragment(topic))
         }
     }
 
-    /**
-     * 비어있는 화면 보이기
-     */
-    override fun showEmptyTopicList() {
-        showToast("초기화되었습니다.")
-        showTopics()
+    override fun onLongClickItem(topic: TopicListDTO) {
+        val menu = arrayOf(resources.getString(R.string.dialog_menu_topic_update), resources.getString(R.string.dialog_menu_topic_delete))
+        MaterialAlertDialogBuilder(requireContext())
+            .setItems (menu) { dialog, which ->
+                when(which) {
+                    0 -> {
+                        val moveTopicDialogIntent =
+                            Intent(requireContext(), TopicDialogActivity::class.java)
+                        moveTopicDialogIntent.putExtra("tag", TAG_TOPIC_UPDATE)
+                        moveTopicDialogIntent.putExtra("topicId", topic.id)
+                        moveTopicDialogIntent.putExtra("topic", topic.topic)
+                        getResultTopic.launch(moveTopicDialogIntent)
+                    }
+                    1 -> {
+                        MaterialAlertDialogBuilder(requireContext(), R.style.alert_dialog_delete_style)
+                            .setTitle(resources.getString(R.string.dialog_title_delete))
+                            .setMessage("${topic.topic}에 등록된 ${topic.countOfThink}개의 생각들도 함께 삭제되며 복구가 불가능합니다.\n정말 삭제하시겠습니까?")
+                            .setNeutralButton(resources.getString(R.string.dialog_btn_cancel)) { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .setPositiveButton(resources.getString(R.string.dialog_btn_delete)) { _, _ ->
+                                presenter.deleteTopicById(topic.id)
+                            }
+                            .show()
+                    }
+                }
+            }.show()
     }
 
     override fun showError(tag: String, message: String?) {
-        if (handler == null) {
-            handler = Handler(Looper.getMainLooper())
-        }
 
-        handler?.let {
-            if (tag == "TOPIC_DELETE") {
-                it.postDelayed(Runnable { printToast(message = "삭제하는 과정에서 오류가 발생하였습니다.") }, 0)
-            } else if (tag == "TOPIC_INSERT") {
-                it.postDelayed(Runnable { printToast(message = "저장하는 과정에서 오류가 발생하였습니다.") }, 0)
-            } else if (tag == "THINK_LIST_SIZE") {
-                it.postDelayed(Runnable { printToast(message = "목록을 불러오는 과정에서 오류가 발생하였습니다") }, 0)
-            } else if (tag == "THINK_ALL_DELETE" || tag == "TOPIC_ALL_DELETE") {
-                it.postDelayed(Runnable { printToast(message = "초기화 과정에서 오류가 발생하였습니다") }, 0)
-            } else if (tag == R.string.tag_topic_list_empty.toString()) {
-                it.postDelayed(Runnable { printToast(message = message) }, 0)
-            } else {
-
-            }
-        }
-
-        handler = null
     }
 
     override fun showToast(message: String?) {
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed(Runnable {
-            Toast.makeText(topicListContext, message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }, 0)
         showTopics()
     }
 
-
-    private fun printToast(message: String?) {
-        Toast.makeText(topicListContext, message, Toast.LENGTH_SHORT)
-            .show()
-    }
-
-    override fun onResetClicked() {
-        presenter.deleteAllTopic()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
         database = null
         handler = null
     }
