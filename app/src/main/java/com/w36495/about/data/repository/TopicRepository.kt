@@ -5,16 +5,16 @@ import kotlinx.coroutines.flow.Flow
 
 interface TopicRepository {
 
-    suspend fun getTopic(id: Long): Flow<Topic>
+    suspend fun getTopicById(topicId: Long): Topic
 
     suspend fun getTopicList(): Flow<List<Topic>>
 
-    suspend fun getTopicListCount(): Flow<Int>
+    suspend fun insertTopic(topic: Topic): String
 
-    suspend fun saveTopic(topic: Topic): Flow<String>
+    suspend fun updateTopic(topicId: Long, topic: String, updateDate: String): String
 
-    suspend fun deleteTopicById(topicId: Long): Flow<String>
+    suspend fun deleteTopicById(topicId: Long): String
 
-    suspend fun deleteAllTopic(): Flow<String>
+    suspend fun deleteAllTopic(): String
 
 }

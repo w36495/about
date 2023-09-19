@@ -1,11 +1,11 @@
 package com.w36495.about.ui.listener
 
-import com.w36495.about.domain.entity.Topic
+import com.w36495.about.domain.dto.TopicListDTO
 
 interface TopicListClickListener {
 
-    fun onTopicListItemClicked(topicId: Long)
+    fun onClickItem(topic: TopicListDTO)
 
-    fun onTopicDeleteClicked(topicId: Long, topic: Topic)
+    fun onLongClickItem(topic: TopicListDTO)
 
 }
