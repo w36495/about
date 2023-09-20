@@ -16,12 +16,12 @@ interface CommentDao {
     fun getCountCommentList(thinkId: Long): Flow<Int>
 
     @Insert
-    fun insertComment(comment: Comment)
+    suspend fun insertComment(comment: Comment)
 
     @Query("DELETE FROM comments WHERE id = :commentId")
-    fun deleteCommentById(commentId: Long)
+    suspend fun deleteCommentById(commentId: Long)
 
     @Query("DELETE FROM comments WHERE thinkId = :thinkId")
-    fun deleteAllComment(thinkId: Long)
+    suspend fun deleteAllComment(thinkId: Long)
 
 }
