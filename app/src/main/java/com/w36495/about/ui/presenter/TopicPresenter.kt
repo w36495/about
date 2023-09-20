@@ -41,13 +41,8 @@ class TopicPresenter(
                 .catch { exception ->
                     _topicListUiState.value = TopicListUiState.Failed(TAG_TOPIC_LIST_PRESENTER, exception.localizedMessage)
                 }
-                .collectLatest { topicList ->
-                    topicList.forEach { topic ->
-                        thinkRepository.getCountOfThinkListByTopicId(topic.id)
-                            .collect { count ->
-                                _topicListUiState.value = TopicListUiState.Success(topicList.map { it.toTopicListDTO(count.toInt()) })
-                            }
-                    }
+                .collectLatest {
+                    _topicListUiState.value = TopicListUiState.Success(it)
                 }
         }
     }
