@@ -11,6 +11,7 @@ interface CommentDao {
 
     @Query("SELECT * FROM comments WHERE thinkId = :thinkId")
     fun getAllCommentList(thinkId: Long): Flow<List<Comment>>
+
     @Query("SELECT count(*) FROM comments WHERE thinkId = :thinkId")
     fun getCountCommentList(thinkId: Long): Flow<Int>
 
