@@ -33,8 +33,8 @@ https://play.google.com/store/apps/details?id=com.w36495.about
 
 ### 사용기술
 - Kotlin
-- MVP(Model-View-Presenter) 디자인 패턴
-- Coroutine + Flow
+- MVP(Model-View-Presenter)
+- Coroutine + Flow 
 - viewBinding
 - Room Database
 - Jetpack Navigation
@@ -92,6 +92,21 @@ https://play.google.com/store/apps/details?id=com.w36495.about
 </br>
 
 ### Trouble Shooting
+
+**주제 목록에 해당하는 총 생각 개수가 일치하지 않음**
+- 문제 상황
+
+  ![버그_생각개수](https://github.com/w36495/about/assets/52291662/ba11c323-63cf-4e5d-8902-3010aeb8e741)
+
+  - '취미' 목록의 생각 개수와 '독서' 목록의 생각 개수가 일치함 (데이터베이스에는 일치하지 않음) 
+- 해결 방법
+  - 데이터베이스의 topics 테이블과 thinks 테이블을 조인하여 select query 문 적용
+  ``` SQL
+  SELECT topics.id, topics.topic, COUNT(topicId) AS countOfThink, topics.registDate, topics.updateDate
+  FROM topics
+  LEFT JOIN thinks ON topics.id = thinks.topicId
+  GROUP BY topics.id
+  ```
 
 </br>
 
