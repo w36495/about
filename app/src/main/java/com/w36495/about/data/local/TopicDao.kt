@@ -3,16 +3,23 @@ package com.w36495.about.data.local
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.w36495.about.domain.dto.TopicListDTO
 import com.w36495.about.domain.entity.Topic
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TopicDao{
-    @Query("SELECT * FROM topics")
-    fun getTopicList(): Flow<List<Topic>>
 
     @Query("SELECT * FROM topics WHERE id = :topicId")
-    suspend fun getTopicById(topicId: Long): Topic
+    fun getTopicById(topicId: Long): Flow<Topic>
+
+    @Query("""
+        SELECT topics.id, topics.topic, COUNT(topicId) AS countOfThink, topics.registDate, topics.updateDate
+        FROM topics
+        LEFT JOIN thinks ON topics.id = thinks.topicId
+        GROUP BY topics.id
+    """)
+    fun getTopicList(): Flow<List<TopicListDTO>>
 
     @Insert
     suspend fun insertTopic(topic: Topic)
