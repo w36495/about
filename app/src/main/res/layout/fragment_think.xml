@@ -2,8 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -37,10 +36,15 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:backgroundTint="@android:color/transparent"
+            android:enabled="false"
             android:fontFamily="@font/notosans_kr_medium"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/think_appbar" />
+            app:layout_constraintTop_toBottomOf="@id/think_appbar">
+
+            <requestFocus />
+        </EditText>
 
         <TextView
             android:id="@+id/think_date"
@@ -77,24 +81,23 @@
             android:id="@+id/tv_comment_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            tools:text="코멘트(11)"
-            app:layout_constraintTop_toBottomOf="@id/think_divider"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@id/think_divider2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/think_divider2"/>
+            app:layout_constraintTop_toBottomOf="@id/think_divider" />
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/think_divider2"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            app:dividerColor="@color/about_grey2"
             android:layout_marginTop="12dp"
+            app:dividerColor="@color/about_grey2"
             app:layout_constraintBottom_toTopOf="@id/think_recyclerview"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_comment_count"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_comment_count" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/think_recyclerview"
@@ -124,6 +127,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_comment_input"
+                android:imeOptions="actionSend"
+                android:inputType="textCapSentences|textAutoCorrect"
                 android:maxLines="1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/think_comment_input_btn"

@@ -23,9 +23,7 @@ class ThinkDialogActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var saveButton: Button
     private lateinit var inputText: EditText
 
-    private var CURRENT_DIALOG_STATE: String? = null
     private var position: Int? = null
-    private var oldThink: String? = null
 
     private val size = Point()
 
@@ -35,17 +33,8 @@ class ThinkDialogActivity : AppCompatActivity(), View.OnClickListener {
 
         initDialog()
 
-        if (intent.getStringExtra("tag") == ThinkListFragment.DIALOG_UPDATE_TAG) {
-            CURRENT_DIALOG_STATE = intent.getStringExtra("tag")
-            position = intent.getIntExtra("position", -1)
-            oldThink = intent.getStringExtra("think")
-        } else {
-            CURRENT_DIALOG_STATE = intent.getStringExtra("tag")
-        }
-
         position?.let {
             dialogToolbar.title = "${it+1}번째 생각"
-            inputText.setText(oldThink)
         }
 
         val windowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -89,12 +78,7 @@ class ThinkDialogActivity : AppCompatActivity(), View.OnClickListener {
             R.id.dialog_think_add_btn_save -> {
                 val moveThinkListIntent = Intent(this, ThinkListFragment::class.java)
                 moveThinkListIntent.putExtra("think", inputText.text.toString())
-
-                if (CURRENT_DIALOG_STATE == ThinkListFragment.DIALOG_ADD_TAG) {
-                    setResult(ThinkListFragment.DIALOG_ADD_RESULT_CODE, moveThinkListIntent)
-                } else if (CURRENT_DIALOG_STATE == ThinkListFragment.DIALOG_UPDATE_TAG) {
-                    setResult(ThinkListFragment.DIALOG_UPDATE_RESULT_CODE, moveThinkListIntent)
-                }
+                setResult(ThinkListFragment.DIALOG_ADD_RESULT_CODE, moveThinkListIntent)
                 finish()
             }
 

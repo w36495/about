@@ -19,10 +19,16 @@ sealed class TopicListUiState {
 }
 
 sealed class ThinkUiState {
-    object Loading : ThinkUiState()
-    object Empty : ThinkUiState()
-    data class Success(val thinkList: List<Think>) : ThinkUiState()
-    data class Failed(val message: String?) : ThinkUiState()
+    object Loading: ThinkUiState()
+    data class Success(val think: Think?) : ThinkUiState()
+    data class Failed(val tag: String, val message: String?) : ThinkUiState()
+}
+
+sealed class ThinkListUiState {
+    object Loading : ThinkListUiState()
+    object Empty : ThinkListUiState()
+    data class Success(val thinkList: List<Think>) : ThinkListUiState()
+    data class Failed(val message: String?) : ThinkListUiState()
 }
 
 sealed class CommentUiState {

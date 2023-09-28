@@ -1,6 +1,7 @@
 package com.w36495.about.domain.dto
 
 import androidx.room.ColumnInfo
+import java.io.Serializable
 
 data class TopicListDTO(
     val id: Long,
@@ -9,4 +10,4 @@ data class TopicListDTO(
     val countOfThink: Int,
     val registDate: String,
     val updateDate: String
-)
+) : Serializable

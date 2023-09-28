@@ -15,8 +15,8 @@ interface ThinkDao {
     @Query("SELECT count(*) FROM thinks WHERE topicId = :topicId")
     fun getCountOfThinkListByTopicId(topicId: Long): Flow<String>
 
-    @Update
-    suspend fun updateThink(think: Think)
+    @Query("UPDATE thinks SET think = :think, updateDate = :updateDate WHERE id = :thinkId")
+    suspend fun updateThink(thinkId: Long, think: String, updateDate: String)
 
     @Insert
     suspend fun insertThink(think: Think)

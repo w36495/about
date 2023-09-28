@@ -12,10 +12,8 @@ interface ThinkListContract {
     }
 
     interface Presenter {
-        fun getThink(id: Long)
         fun getThinkList(topicId: Long)
         fun saveThink(think: Think)
-        fun updateThink(think: Think)
         fun deleteThinkById(id: Long)
     }
 

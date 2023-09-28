@@ -11,8 +11,8 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.w36495.about.R
@@ -149,11 +149,8 @@ class TopicListFragment : Fragment(), TopicListClickListener, TopicListContract.
     }
 
     override fun onClickItem(topic: TopicListDTO) {
-        parentFragmentManager.commit {
-            setReorderingAllowed(true)
-            addToBackStack(TAG_THINK_LIST)
-            replace(R.id.main_fragment_container, ThinkListFragment(topic))
-        }
+        val action = TopicListFragmentDirections.actionNavTopicListFragmentToThinkListFragment(topic)
+        binding.root.findNavController().navigate(action)
     }
 
     override fun onLongClickItem(topic: TopicListDTO) {
