@@ -14,6 +14,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -186,7 +188,8 @@ class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.V
 
     override fun onThinkListItemClicked(position: Int, think: Think) {
         this.position = position
-        showThink(think)
+        val action = ThinkListFragmentDirections.actionThinkListFragmentToThinkFragment(think, position)
+        binding.root.findNavController().navigate(action)
     }
 
     override fun showThinkList(thinkList: List<Think>) {

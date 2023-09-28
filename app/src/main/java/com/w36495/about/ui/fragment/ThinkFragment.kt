@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.w36495.about.contract.ThinkContract
@@ -23,17 +24,16 @@ import com.w36495.about.ui.listener.CommentItemDeleteListener
 import com.w36495.about.ui.listener.CommentItemTouchHelper
 import com.w36495.about.ui.presenter.ThinkPresenter
 import com.w36495.about.util.DateFormat
-import com.w36495.about.util.subStringForDate
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ThinkFragment(
-    private val position: Int,
-    private val think: Think
-) : Fragment(), ThinkContract.View, CommentItemClickListener, CommentItemDeleteListener {
+class ThinkFragment : Fragment(), ThinkContract.View, CommentItemClickListener, CommentItemDeleteListener {
 
     private var _binding: FragmentThinkBinding? = null
     private val binding: FragmentThinkBinding get() = _binding!!
+
+    private val args: ThinkFragmentArgs by navArgs()
+
     private val commentListAdapter: CommentListAdapter by lazy {
         CommentListAdapter()
     }
@@ -67,18 +67,14 @@ class ThinkFragment(
     }
 
     private fun setup() {
-        binding.thinkToolbar.title = "${position}번째 생각"
+        binding.thinkToolbar.title = "${args.position + 1}번째 생각"
         binding.thinkContents.apply {
-            setText(think.text)
+            setText(args.think.think)
         }
-        think.registDate.apply {
-            binding.thinkDate.text = this.subStringForDate(this)
-        }
-
+        binding.thinkDate.text = args.think.registDate.substring(0, 10)
         binding.thinkToolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
-
         binding.thinkCommentInputBtn.setOnClickListener {
             val inputComment = binding.thinkCommentInput.text.toString()
             saveComment(inputComment)
@@ -112,8 +108,8 @@ class ThinkFragment(
 
     private fun getContentFromPresenter() {
         with(presenter) {
-            getAllCommentList(think.id)
-            getCountCommentList(think.id)
+            getAllCommentList(args.think.id)
+            getCountCommentList(args.think.id)
         }
     }
 
@@ -151,7 +147,7 @@ class ThinkFragment(
 
     private fun saveComment(inputText: String) {
         val comment = Comment(
-            thinkId = think.id,
+            thinkId = args.think.id,
             comment = inputText,
             registDate = DateFormat.currentDateFormat()
         )
