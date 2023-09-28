@@ -24,7 +24,7 @@ import com.w36495.about.R
 import com.w36495.about.ui.adapter.ThinkListAdapter
 import com.w36495.about.domain.entity.Think
 import com.w36495.about.contract.ThinkListContract
-import com.w36495.about.data.ThinkUiState
+import com.w36495.about.data.ThinkListUiState
 import com.w36495.about.ui.presenter.ThinkListPresenter
 import com.w36495.about.domain.entity.Topic
 import com.w36495.about.data.local.AppDatabase
@@ -154,16 +154,16 @@ class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.V
         lifecycleScope.launch {
             (presenter as ThinkListPresenter).uiState.collect { uiState ->
                 when (uiState) {
-                    is ThinkUiState.Loading -> {
+                    is ThinkListUiState.Loading -> {
                         println("===== loading =====")
                     }
-                    is ThinkUiState.Empty -> {
+                    is ThinkListUiState.Empty -> {
                         println("===== empty =====")
                     }
-                    is ThinkUiState.Success -> {
+                    is ThinkListUiState.Success -> {
                         thinkListAdapter.setThinkList(uiState.thinkList)
                     }
-                    is ThinkUiState.Failed -> {
+                    is ThinkListUiState.Failed -> {
                         println("===== failed : ${uiState.message} =====")
                     }
                 }

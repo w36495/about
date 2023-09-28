@@ -14,32 +14,20 @@ class ThinkListPresenter(
     private val thinkListView: ThinkListContract.View
 ) : ThinkListContract.Presenter {
 
-    private val _uiState = MutableStateFlow<ThinkUiState>(ThinkUiState.Loading)
-    val uiState: StateFlow<ThinkUiState> = _uiState.asStateFlow()
-
-    override fun getThink(id: Long) {
-        CoroutineScope(Dispatchers.IO).launch {
-            thinkRepository.getThink(id)
-                .catch { exception ->
-                    _uiState.value = ThinkUiState.Failed(exception.localizedMessage)
-                }
-                .collect {
-                    thinkListView.showThink(it)
-                }
-        }
-    }
+    private val _uiState = MutableStateFlow<ThinkListUiState>(ThinkListUiState.Loading)
+    val uiState: StateFlow<ThinkListUiState> = _uiState.asStateFlow()
 
     override fun getThinkList(topicId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
-            thinkRepository.getThinkList(topicId)
+            thinkRepository.getThinkListByTopicId(topicId)
                 .onStart {
-                    _uiState.value = ThinkUiState.Loading
+                    _uiState.value = ThinkListUiState.Loading
                 }
                 .catch { exception ->
-                    _uiState.value = ThinkUiState.Failed(exception.localizedMessage)
+                    _uiState.value = ThinkListUiState.Failed(exception.localizedMessage)
                 }
                 .collect {
-                    _uiState.value = ThinkUiState.Success(it)
+                    _uiState.value = ThinkListUiState.Success(it)
                 }
         }
     }

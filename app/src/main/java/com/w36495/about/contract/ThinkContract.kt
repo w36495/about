@@ -12,7 +12,7 @@ interface ThinkContract {
 
     interface Presenter {
         fun getThink(thinkId: Long)
-        fun updateThink(think: Think)
+        fun updateThink(thinkId: Long, think: String, updateDate: String)
         fun deleteThink(thinkId: Long)
         fun getAllCommentList(thinkId: Long)
         fun insertComment(comment: Comment)
