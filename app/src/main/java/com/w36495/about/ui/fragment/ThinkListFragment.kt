@@ -67,14 +67,10 @@ class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.V
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        thinkListContext = view.context
-        thinkListView = view
 
         database = AppDatabase.getInstance(view.context)
 
         presenter = ThinkListPresenter(ThinkRepositoryImpl(database!!.thinkDao()), this)
-
-        binding.thinkListToolbar.title = topic.topic
 
         thinkListAdapter = ThinkListAdapter()
         thinkListAdapter.setClickListener(this)
@@ -115,7 +111,7 @@ class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.V
             when (menu.itemId) {
                 R.id.main_add -> {
                     val moveThinkAddIntent =
-                        Intent(thinkListContext, ThinkDialogActivity::class.java)
+                        Intent(requireContext(), ThinkDialogActivity::class.java)
                     moveThinkAddIntent.putExtra("tag", DIALOG_ADD_TAG)
                     getResultThink.launch(moveThinkAddIntent)
                     true
@@ -125,7 +121,7 @@ class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.V
         }
 
         binding.thinkListToolbar.setNavigationOnClickListener {
-            parentFragmentManager.popBackStack()
+            binding.root.findNavController().popBackStack()
         }
 
         showThinks()
@@ -157,7 +153,7 @@ class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.V
     override fun onSwipeItem(thinkId: Long) {
         thinkItemTouchHelper.removeSwipeAfterDelete(binding.thinkListRecyclerview)
 
-        MaterialAlertDialogBuilder(thinkListContext, R.style.AboutTheme_AlertDialog)
+        MaterialAlertDialogBuilder(requireContext(), R.style.AboutTheme_AlertDialog)
             .setTitle(resources.getString(R.string.dialog_title_think_delete))
             .setMessage(resources.getString(R.string.dialog_message_think_delete))
             .setNeutralButton(resources.getString(R.string.dialog_btn_cancel)) { dialog, _ ->
@@ -182,20 +178,12 @@ class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.V
     override fun showThink(think: Think) {
         currentThink = think
 
-        position?.let {
-            parentFragmentManager.commit {
-                setReorderingAllowed(true)
-                addToBackStack(THINK_DETAIL_TAG)
-                replace(R.id.main_fragment_container, ThinkFragment(it+1, think))
-            }
-        }
-
     }
 
     override fun showToast(message: String) {
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed(Runnable {
-            Toast.makeText(thinkListContext, message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }, 0)
         showThinks()
     }
@@ -203,7 +191,7 @@ class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.V
     override fun showError(message: String) {
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed(Runnable {
-            Toast.makeText(thinkListContext, message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }, 0)
     }
 
