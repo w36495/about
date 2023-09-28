@@ -5,15 +5,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface ThinkRepository {
 
-    suspend fun getThink(id: Long): Flow<Think>
+    suspend fun getThinkById(thinkId: Long): Flow<Think>
 
-    suspend fun getThinkList(topicId: Long): Flow<List<Think>>
+    suspend fun getThinkListByTopicId(topicId: Long): Flow<List<Think>>
 
-    suspend fun getThinkListSize(topicId: Long): Flow<Int>
+    suspend fun getCountOfThinkListByTopicId(topicId: Long): Flow<String>
 
-    suspend fun getThinkListCount(): Flow<Int>
-
-    suspend fun saveThink(think: Think): Flow<String>
+    suspend fun insertThink(think: Think): String
 
     suspend fun updateThink(thinkId: Long, think: String, updateDate: String): String
 
