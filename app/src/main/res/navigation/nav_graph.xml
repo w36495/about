@@ -40,8 +40,8 @@
         android:label="@string/nav_label_think"
         tools:layout="@layout/fragment_think" >
         <argument
-            android:name="think"
-            app:argType="com.w36495.about.domain.entity.Think" />
+            android:name="thinkId"
+            app:argType="long" />
         <argument
             android:name="position"
             app:argType="integer" />
