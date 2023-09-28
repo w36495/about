@@ -20,7 +20,7 @@ import kotlinx.coroutines.withContext
 class ThinkPresenter(
     private val thinkRepository: ThinkRepositoryImpl,
     private val commentRepository: CommentRepositoryImpl,
-    private val commentView: ThinkContract.View,
+    private val thinkView: ThinkContract.View,
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : ThinkContract.Presenter {
 
@@ -82,11 +82,11 @@ class ThinkPresenter(
             try {
                 commentRepository.insertComment(comment)
                 withContext(mainDispatcher) {
-                    commentView.showToast("코멘트가 등록되었습니다.")
+                    thinkView.showToast("코멘트가 등록되었습니다.")
                 }
             } catch (exception: Exception) {
                 withContext(mainDispatcher) {
-                    commentView.showErrorToast("코멘트 등록 중 오류가 발생하였습니다.")
+                    thinkView.showErrorToast("코멘트 등록 중 오류가 발생하였습니다.")
                 }
             }
         }
@@ -97,11 +97,11 @@ class ThinkPresenter(
             try {
                 commentRepository.deleteCommentById(commentId)
                 withContext(mainDispatcher) {
-                    commentView.showToast("코멘트가 삭제되었습니다.")
+                    thinkView.showToast("코멘트가 삭제되었습니다.")
                 }
             } catch (exception: Exception) {
                 withContext(mainDispatcher) {
-                    commentView.showErrorToast("코멘트 삭제 중 오류가 발생하였습니다.")
+                    thinkView.showErrorToast("코멘트 삭제 중 오류가 발생하였습니다.")
                 }
             }
         }

@@ -50,7 +50,7 @@ class ThinkFragment : Fragment(), ThinkContract.View, CommentItemClickListener, 
         ThinkPresenter(
             thinkRepository = ThinkRepositoryImpl((database!!.thinkDao())),
             commentRepository = CommentRepositoryImpl(database!!.commentDao()),
-            commentView = this
+            thinkView = this
         )
     }
 
