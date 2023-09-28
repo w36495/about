@@ -34,7 +34,16 @@ class ThinkPresenter(
     val commentState: StateFlow<Int> = _commentState
 
     override fun getThink(thinkId: Long) {
-        // TODO : THINK_PRESENTER getThink()
+        CoroutineScope(Dispatchers.IO).launch {
+            thinkRepository.getThinkById(thinkId)
+                .catch {
+                    _thinkUiState.value = ThinkUiState.Failed("ThinkPresenter(getThink)", it.localizedMessage)
+                }
+                .collectLatest {
+                    _thinkUiState.value = ThinkUiState.Success(it)
+                }
+        }
+
     }
 
     override fun updateThink(thinkId: Long, think: String, updateDate: String) {
