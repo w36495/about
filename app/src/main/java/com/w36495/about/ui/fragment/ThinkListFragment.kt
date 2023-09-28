@@ -45,11 +45,8 @@ class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.V
 
     companion object {
         const val DIALOG_ADD_TAG: String = "THINK_ADD_TAG"
-        const val DIALOG_UPDATE_TAG: String = "THINK_UPDATE_TAG"
-        const val THINK_DETAIL_TAG: String = "THINK_DETAIL_FRAGMENT"
 
         const val DIALOG_ADD_RESULT_CODE: Int = 999
-        const val DIALOG_UPDATE_RESULT_CODE: Int = 888
     }
 
     private lateinit var getResultThink: ActivityResultLauncher<Intent>
@@ -115,16 +112,6 @@ class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.V
                     )
                     (presenter as ThinkListPresenter).saveThink(think)
                 }
-            } else if (result.resultCode == DIALOG_UPDATE_RESULT_CODE) {
-                result.data?.let { intent ->
-                    currentThink?.let { think ->
-                        think.text = intent.getStringExtra("think")!!
-                        think.updateDate = DateFormat.currentDateFormat()
-                    }
-                    (presenter as ThinkListPresenter).updateThink(currentThink!!)
-                }
-            } else {
-                println("===== getResultThink - Failed =====")
             }
         }
 
