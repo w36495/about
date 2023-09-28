@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(
     tableName = "thinks",
@@ -24,4 +25,4 @@ data class Think(
     val think: String,
     val registDate: String,
     val updateDate: String
-)
+) : Serializable
