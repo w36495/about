@@ -34,14 +34,12 @@ import com.w36495.about.ui.listener.ThinkSwipeListener
 import com.w36495.about.util.DateFormat
 import kotlinx.coroutines.launch
 
-class ThinkListFragment(private val topic: Topic) : Fragment(),
-    ThinkSwipeListener, ThinkListItemClickListener, ThinkListContract.View {
+class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.View {
 
     private var _binding: FragmentThinkListBinding? = null
     private val binding: FragmentThinkListBinding get() = _binding!!
 
-    private lateinit var thinkListContext: Context
-    private lateinit var thinkListView: View
+    private val args: ThinkListFragmentArgs by navArgs()
 
     companion object {
         const val DIALOG_ADD_TAG: String = "THINK_ADD_TAG"
@@ -89,6 +87,8 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
         thinkItemTouchHelper = ThinkItemTouchHelper()
         val itemTouchHelper = ItemTouchHelper(thinkItemTouchHelper)
 
+        binding.thinkListToolbar.title = args.topic.topic
+
         binding.thinkListRecyclerview.apply {
             adapter = thinkListAdapter
             layoutManager = LinearLayoutManager(view.context)
@@ -106,8 +106,8 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
             if (result.resultCode == DIALOG_ADD_RESULT_CODE) {
                 result.data?.let {
                     val think = Think(
-                        topicId = topic.id,
-                        text = it.getStringExtra("think")!!,
+                        topicId = args.topic.id,
+                        think = it.getStringExtra("think")!!,
                         registDate = DateFormat.currentDateFormat(),
                         updateDate = DateFormat.currentDateFormat()
                     )
@@ -147,7 +147,7 @@ class ThinkListFragment(private val topic: Topic) : Fragment(),
     }
 
     private fun showThinks() {
-        presenter.getThinkList(topic.id)
+        presenter.getThinkList(args.topic.id)
 
         lifecycleScope.launch {
             (presenter as ThinkListPresenter).uiState.collect { uiState ->
