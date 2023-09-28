@@ -24,15 +24,27 @@
     <fragment
         android:id="@+id/nav_thinkList_fragment"
         android:name="com.w36495.about.ui.fragment.ThinkListFragment"
-        android:label="@string/nav_label_thinkList">
+        android:label="@string/nav_label_thinkList"
+        tools:layout="@layout/fragment_think_list">
         <action
             android:id="@+id/action_thinkListFragment_to_thinkFragment"
             app:destination="@id/nav_think_fragment" />
+        <argument
+            android:name="topic"
+            app:argType="com.w36495.about.domain.dto.TopicListDTO" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_think_fragment"
         android:name="com.w36495.about.ui.fragment.ThinkFragment"
-        android:label="@string/nav_label_think" />
+        android:label="@string/nav_label_think"
+        tools:layout="@layout/fragment_think" >
+        <argument
+            android:name="think"
+            app:argType="com.w36495.about.domain.entity.Think" />
+        <argument
+            android:name="position"
+            app:argType="integer" />
+    </fragment>
 
 </navigation>
