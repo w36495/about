@@ -6,7 +6,6 @@ import com.w36495.about.data.ThinkUiState
 import com.w36495.about.data.repository.CommentRepositoryImpl
 import com.w36495.about.data.repository.ThinkRepositoryImpl
 import com.w36495.about.domain.entity.Comment
-import com.w36495.about.domain.entity.Think
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

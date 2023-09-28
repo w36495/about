@@ -1,6 +1,5 @@
 package com.w36495.about.ui.fragment
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -12,7 +11,6 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
@@ -26,7 +24,6 @@ import com.w36495.about.domain.entity.Think
 import com.w36495.about.contract.ThinkListContract
 import com.w36495.about.data.ThinkListUiState
 import com.w36495.about.ui.presenter.ThinkListPresenter
-import com.w36495.about.domain.entity.Topic
 import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.data.repository.ThinkRepositoryImpl
 import com.w36495.about.databinding.FragmentThinkListBinding
