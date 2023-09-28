@@ -91,6 +91,7 @@ https://play.google.com/store/apps/details?id=com.w36495.about
 - 삭제 버튼 클릭 시, 보여지는 하단 다이얼로그를 통해 삭제 가능
 </br>
 
+---
 ### Trouble Shooting
 
 **주제 목록에 해당하는 총 생각 개수가 일치하지 않음**
@@ -99,7 +100,7 @@ https://play.google.com/store/apps/details?id=com.w36495.about
   ![버그_생각개수](https://github.com/w36495/about/assets/52291662/ba11c323-63cf-4e5d-8902-3010aeb8e741)
 
   - '취미' 목록의 생각 개수와 '독서' 목록의 생각 개수가 일치함 (데이터베이스에는 일치하지 않음) 
-- 해결 방법
+- 해결 방법 [(링크)](https://w36495.tistory.com/99)
   - 데이터베이스의 topics 테이블과 thinks 테이블을 조인하여 select query 문 적용
   ``` SQL
   SELECT topics.id, topics.topic, COUNT(topicId) AS countOfThink, topics.registDate, topics.updateDate
@@ -108,6 +109,16 @@ https://play.google.com/store/apps/details?id=com.w36495.about
   GROUP BY topics.id
   ```
 
+**생각 화면에서 Item을 삭제했을 때 NullPointerException 발생**  
+- 문제 상황
+
+  ![생각삭제-버그](https://github.com/w36495/about/assets/52291662/68372fc4-af0c-4663-9e65-87870af10a16)
+  
+  - 아이템 삭제 시, NullPointerException 발생하며 앱 종료
+
+- 해결 방법 [(링크)](https://w36495.tistory.com/100)
+  - UiState 클래스에서 데이터를 가져올 때 호출되는 Success 클래스의 매개변수를 nullable 로 변경
+  - 생각 화면에서 데이터를 관찰할 때, 값이 null 인 경우 popBackStack() 을 통해 이전 화면으로 이동 처리
 </br>
 
 ### 학습한 내용
