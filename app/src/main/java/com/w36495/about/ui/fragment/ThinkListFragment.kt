@@ -31,8 +31,7 @@ import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.data.repository.ThinkRepositoryImpl
 import com.w36495.about.databinding.FragmentThinkListBinding
 import com.w36495.about.ui.dialog.ThinkDialogActivity
-import com.w36495.about.ui.listener.ThinkListItemClickListener
-import com.w36495.about.ui.listener.ThinkSwipeListener
+import com.w36495.about.ui.listener.ThinkListItemListener
 import com.w36495.about.util.DateFormat
 import kotlinx.coroutines.launch
 
@@ -81,7 +80,7 @@ class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.V
         binding.thinkListToolbar.title = topic.topic
 
         thinkListAdapter = ThinkListAdapter()
-        thinkListAdapter.setClickListener(this, this)
+        thinkListAdapter.setClickListener(this)
 
         thinkItemTouchHelper = ThinkItemTouchHelper()
         val itemTouchHelper = ItemTouchHelper(thinkItemTouchHelper)
@@ -158,7 +157,7 @@ class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.V
         }
     }
 
-    override fun onThinkSwiped(thinkId: Long) {
+    override fun onSwipeItem(thinkId: Long) {
         thinkItemTouchHelper.removeSwipeAfterDelete(binding.thinkListRecyclerview)
 
         MaterialAlertDialogBuilder(thinkListContext, R.style.AboutTheme_AlertDialog)
@@ -173,7 +172,7 @@ class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.V
             .show()
     }
 
-    override fun onThinkListItemClicked(position: Int, think: Think) {
+    override fun onClickItem(position: Int, think: Think) {
         this.position = position
         val action = ThinkListFragmentDirections.actionThinkListFragmentToThinkFragment(think, position)
         binding.root.findNavController().navigate(action)

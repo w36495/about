@@ -5,14 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.w36495.about.databinding.ItemThinkListBinding
 import com.w36495.about.domain.entity.Think
-import com.w36495.about.ui.listener.ThinkListItemClickListener
-import com.w36495.about.ui.listener.ThinkSwipeListener
+import com.w36495.about.ui.listener.ThinkListItemListener
 
 class ThinkListAdapter : RecyclerView.Adapter<ThinkListViewHolder>() {
 
     private var thinkList = arrayListOf<Think>()
-    private lateinit var thinkSwipeListener: ThinkSwipeListener
-    private lateinit var thinkListItemClickListener: ThinkListItemClickListener
+    private lateinit var thinkListItemListener: ThinkListItemListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThinkListViewHolder {
         return ThinkListViewHolder(ItemThinkListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -22,23 +20,18 @@ class ThinkListAdapter : RecyclerView.Adapter<ThinkListViewHolder>() {
         holder.bind(thinkList[position])
 
         holder.onSwipeItem = {
-            thinkSwipeListener.onThinkSwiped(thinkList[position].id)
+            thinkListItemListener.onSwipeItem(thinkList[position].id)
+        }
+
+        holder.onClickItem = {
+            thinkListItemListener.onClickItem(position, thinkList[position])
         }
     }
 
     override fun getItemCount(): Int = thinkList.size
 
-    fun setClickListener(
-        thinkSwipeListener: ThinkSwipeListener,
-        thinkListItemClickListener: ThinkListItemClickListener
-    ) {
-        this.thinkSwipeListener = thinkSwipeListener
-        this.thinkListItemClickListener = thinkListItemClickListener
-    }
-
-    fun addThink(think: Think) {
-        thinkList.add(think)
-        notifyDataSetChanged()
+    fun setClickListener(thinkSwipeListener: ThinkListItemListener) {
+        this.thinkListItemListener = thinkSwipeListener
     }
 
     fun setThinkList(thinkList: List<Think>) {
