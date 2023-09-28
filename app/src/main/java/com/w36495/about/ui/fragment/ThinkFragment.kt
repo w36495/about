@@ -1,17 +1,24 @@
 package com.w36495.about.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.w36495.about.R
 import com.w36495.about.contract.ThinkContract
 import com.w36495.about.data.CommentUiState
+import com.w36495.about.data.ThinkUiState
 import com.w36495.about.data.local.AppDatabase
 import com.w36495.about.data.repository.CommentRepositoryImpl
 import com.w36495.about.data.repository.ThinkRepositoryImpl
@@ -84,6 +91,7 @@ class ThinkFragment : Fragment(), ThinkContract.View, CommentItemClickListener, 
         setupRecyclerView()
         getContentFromPresenter()
 
+        showThink(args.thinkId)
         showCommentCount()
         showCommentList()
     }
@@ -106,7 +114,89 @@ class ThinkFragment : Fragment(), ThinkContract.View, CommentItemClickListener, 
         commentListAdapter.setOnCommentItemClickListener(this)
     }
 
-    private fun getContentFromPresenter() {
+    private fun showThink(thinkId: Long) {
+        presenter.getThink(thinkId)
+
+        lifecycleScope.launch {
+            (presenter as ThinkPresenter).thinkUiState.collectLatest {
+                when(it) {
+                    is ThinkUiState.Loading -> { }
+                    is ThinkUiState.Success -> {
+                        if(it.think == null) {
+                            binding.root.findNavController().popBackStack()
+                        } else {
+                            binding.thinkToolbar.title = "${args.position + 1}번째 생각"
+                            binding.thinkContents.apply {
+                                setText(it.think.think)
+                            }
+                            binding.thinkDate.text = it.think.registDate.substring(0, 10)
+
+                            showMultiDialog(it.think)
+                        }
+                    }
+                    is ThinkUiState.Failed -> { }
+                }
+            }
+        }
+    }
+
+    private fun showMultiDialog(think: Think) {
+        binding.thinkToolbar.setOnMenuItemClickListener { menu ->
+            when(menu.itemId) {
+                R.id.menu_think_detail_more -> {
+                    val menus = arrayOf(resources.getString(R.string.dialog_menu_think_update), resources.getString(R.string.dialog_menu_think_delete))
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setItems(menus) { dialog, item ->
+                            when(item) {
+                                0 -> {
+                                    updateThink()
+                                }
+                                1 -> {
+                                    MaterialAlertDialogBuilder(requireContext(), R.style.alert_dialog_delete_style)
+                                        .setTitle(resources.getString(R.string.dialog_title_delete))
+                                        .setMessage("[${think.think}] 생각에 해당되는 모든 코멘트들도 함께 삭제되며, 복구는 불가능합니다.")
+                                        .setNeutralButton(resources.getString(R.string.dialog_btn_cancel)) { dialog, _ ->
+                                            dialog.dismiss()
+                                        }
+                                        .setPositiveButton(resources.getString(R.string.dialog_btn_delete)) { dialog, _ ->
+                                            presenter.deleteThink(think.id)
+                                        }
+                                        .show()
+                                }
+                            }
+                        }.show()
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun updateThink() {
+        binding.thinkContents.apply {
+            isEnabled = true
+            requestFocus()
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            // TODO : toggleSoftInput -> API 31 에서 deprecated -> 버전별 처리하기
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+        }
+        binding.thinkToolbar.menu[0].icon = resources.getDrawable(R.drawable.ic_baseline_add_24)
+        binding.thinkToolbar.setOnMenuItemClickListener { menu ->
+            when(menu.itemId) {
+                R.id.menu_think_detail_more -> {
+                    binding.thinkContents.isEnabled = false
+                    binding.thinkToolbar.menu[0].icon = resources.getDrawable(R.drawable.ic_more_vert_24)
+
+                    val inputText = binding.thinkContents.text.toString()
+                    presenter.updateThink(args.thinkId, inputText, DateFormat.currentDateFormat())
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun setupComment(thinkId: Long) {
         with(presenter) {
             getAllCommentList(args.think.id)
             getCountCommentList(args.think.id)

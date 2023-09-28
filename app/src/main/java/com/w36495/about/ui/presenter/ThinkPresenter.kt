@@ -2,6 +2,7 @@ package com.w36495.about.ui.presenter
 
 import com.w36495.about.contract.ThinkContract
 import com.w36495.about.data.CommentUiState
+import com.w36495.about.data.ThinkUiState
 import com.w36495.about.data.repository.CommentRepositoryImpl
 import com.w36495.about.data.repository.ThinkRepositoryImpl
 import com.w36495.about.domain.entity.Comment
@@ -23,6 +24,9 @@ class ThinkPresenter(
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : ThinkContract.Presenter {
 
+    private val _thinkUiState = MutableStateFlow<ThinkUiState>(ThinkUiState.Loading)
+    val thinkUiState: StateFlow<ThinkUiState> get() = _thinkUiState
+
     private val _uiState = MutableStateFlow<CommentUiState>(CommentUiState.Loading)
     val uiState: StateFlow<CommentUiState> = _uiState
 
@@ -33,12 +37,32 @@ class ThinkPresenter(
         // TODO : THINK_PRESENTER getThink()
     }
 
-    override fun updateThink(think: Think) {
-        // TODO : THINK_PRESENTER updateThink()
+    override fun updateThink(thinkId: Long, think: String, updateDate: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                thinkRepository.updateThink(thinkId, think, updateDate)
+                withContext(mainDispatcher) {
+                    thinkView.showToast("생각 수정이 완료되었습니다.")
+                }
+            } catch (exception: Exception) {
+                thinkView.showErrorToast("생각 수정 중 오류가 발생하였습니다.")
+            }
+        }
     }
 
     override fun deleteThink(thinkId: Long) {
-        // TODO : THINK_PRESENTER deleteThink()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                thinkRepository.deleteThinkById(thinkId)
+                withContext(mainDispatcher) {
+                    thinkView.showToast("생각이 삭제되었습니다.")
+                }
+            } catch (exception: Exception) {
+                withContext(mainDispatcher) {
+                    thinkView.showErrorToast("생각 삭제 중 오류가 발생하였습니다.")
+                }
+            }
+        }
     }
 
     override fun getAllCommentList(thinkId: Long) {

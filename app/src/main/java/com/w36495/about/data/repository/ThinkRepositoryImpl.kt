@@ -42,14 +42,12 @@ class ThinkRepositoryImpl(private val thinkDao: ThinkDao) : ThinkRepository {
         emit(result.toString())
     }
 
-    override suspend fun deleteThinkByTopicId(id: Long): Flow<String> = flow {
-        val result = thinkDao.deleteThinkByTopicId(id)
-        emit(result.toString())
+    override suspend fun updateThink(thinkId: Long, think: String, updateDate: String): String {
+        return thinkDao.updateThink(thinkId, think, updateDate).toString()
     }
 
-    override suspend fun deleteAllThink(): Flow<String> = flow {
-        val result = thinkDao.deleteAllThinks()
-        emit(result.toString())
+    override suspend fun deleteThinkById(thinkId: Long): String {
+        return thinkDao.deleteThinkById(thinkId).toString()
     }
 
 }

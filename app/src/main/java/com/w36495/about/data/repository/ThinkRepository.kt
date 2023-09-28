@@ -15,12 +15,8 @@ interface ThinkRepository {
 
     suspend fun saveThink(think: Think): Flow<String>
 
-    suspend fun updateThink(think: Think): Flow<String>
+    suspend fun updateThink(thinkId: Long, think: String, updateDate: String): String
 
-    suspend fun deleteThinkById(id: Long): Flow<String>
-
-    suspend fun deleteThinkByTopicId(id: Long): Flow<String>
-
-    suspend fun deleteAllThink(): Flow<String>
+    suspend fun deleteThinkById(thinkId: Long): String
 
 }
