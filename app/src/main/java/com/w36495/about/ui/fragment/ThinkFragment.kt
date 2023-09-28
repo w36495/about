@@ -74,13 +74,8 @@ class ThinkFragment : Fragment(), ThinkContract.View, CommentItemClickListener, 
     }
 
     private fun setup() {
-        binding.thinkToolbar.title = "${args.position + 1}번째 생각"
-        binding.thinkContents.apply {
-            setText(args.think.think)
-        }
-        binding.thinkDate.text = args.think.registDate.substring(0, 10)
         binding.thinkToolbar.setNavigationOnClickListener {
-            parentFragmentManager.popBackStack()
+            binding.root.findNavController().popBackStack()
         }
         binding.thinkCommentInputBtn.setOnClickListener {
             val inputComment = binding.thinkCommentInput.text.toString()
@@ -89,7 +84,7 @@ class ThinkFragment : Fragment(), ThinkContract.View, CommentItemClickListener, 
         }
 
         setupRecyclerView()
-        getContentFromPresenter()
+        setupComment(args.thinkId)
 
         showThink(args.thinkId)
         showCommentCount()
@@ -198,8 +193,8 @@ class ThinkFragment : Fragment(), ThinkContract.View, CommentItemClickListener, 
 
     private fun setupComment(thinkId: Long) {
         with(presenter) {
-            getAllCommentList(args.think.id)
-            getCountCommentList(args.think.id)
+            getAllCommentList(thinkId)
+            getCountCommentList(thinkId)
         }
     }
 
@@ -237,7 +232,7 @@ class ThinkFragment : Fragment(), ThinkContract.View, CommentItemClickListener, 
 
     private fun saveComment(inputText: String) {
         val comment = Comment(
-            thinkId = args.think.id,
+            thinkId = args.thinkId,
             comment = inputText,
             registDate = DateFormat.currentDateFormat()
         )

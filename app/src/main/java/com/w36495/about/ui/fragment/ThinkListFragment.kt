@@ -171,7 +171,7 @@ class ThinkListFragment : Fragment(), ThinkListItemListener, ThinkListContract.V
 
     override fun onClickItem(position: Int, think: Think) {
         this.position = position
-        val action = ThinkListFragmentDirections.actionThinkListFragmentToThinkFragment(think, position)
+        val action = ThinkListFragmentDirections.actionThinkListFragmentToThinkFragment(think.id, position)
         binding.root.findNavController().navigate(action)
     }
 
