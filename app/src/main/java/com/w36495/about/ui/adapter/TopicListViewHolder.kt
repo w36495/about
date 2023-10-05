@@ -14,7 +14,7 @@ class TopicListViewHolder(private val binding: ItemTopicListBinding) :
     fun bind(topic: TopicListDTO) {
         binding.topicListItemTopic.text = topic.topic
         binding.topicListItemDate.text = DateFormat.calDate(topic.registDate).toString()
-        binding.topicListItemThinkCount.text = topic.countOfThink.toString()
+        binding.tvCount.text = topic.countOfThink.toString()
 
         binding.topicListItemCardView.setOnClickListener {
             onClickItem?.let { onClickItem ->
