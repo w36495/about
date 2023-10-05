@@ -35,7 +35,23 @@ class MainActivity : AppCompatActivity() {
         val navHost = supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
         val navController = navHost.navController
 
-        binding.mainBottomNavigation.setupWithNavController(navController)
+        binding.mainBottomNavigation.apply {
+            setupWithNavController(navController)
+
+            setOnItemSelectedListener {
+                when(it.itemId) {
+                    R.id.nav_topicList_fragment -> {
+                        navController.navigate(R.id.nav_topicList_fragment)
+                        true
+                    }
+                    R.id.nav_setting_fragment -> {
+                        navController.navigate(R.id.nav_setting_fragment)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
