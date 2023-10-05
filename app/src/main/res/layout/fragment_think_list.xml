@@ -11,6 +11,7 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/think_list_appbar"
             android:layout_width="0dp"
+            app:elevation="0dp"
             android:layout_height="wrap_content"
             android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"

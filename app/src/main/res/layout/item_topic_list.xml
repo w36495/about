@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -15,80 +14,98 @@
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="4dp"
+        app:cardCornerRadius="14dp"
         app:contentPadding="16dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/topic_list_item_topic"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="normal"
-                app:layout_constraintEnd_toStartOf="@id/topic_list_item_think_count"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="나의 습관들" />
-
-            <TextView
-                android:id="@+id/topic_list_item_date_prefix"
+            <LinearLayout
+                android:id="@+id/layout_count"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_date_prefix"
-                android:textColor="@color/black"
-                app:layout_constraintBaseline_toBaselineOf="@id/topic_list_item_date"
-                app:layout_constraintEnd_toStartOf="@id/topic_list_item_date"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/topic_list_item_date" />
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/topic_list_item_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/topic_list_item_date_prefix"
-                app:layout_constraintEnd_toStartOf="@id/topic_list_item_date_suffix"
-                app:layout_constraintStart_toEndOf="@id/topic_list_item_date_prefix"
-                app:layout_constraintTop_toBottomOf="@id/topic_list_item_topic"
-                tools:text="82" />
+                <TextView
+                    android:id="@+id/tv_count"
+                    android:layout_width="44dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="1"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/topic_list_item_date_suffix"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="@string/text_date_suffix"
-                android:textColor="@color/black"
-                app:layout_constraintBaseline_toBaselineOf="@id/topic_list_item_date"
-                app:layout_constraintBottom_toBottomOf="@id/topic_list_item_date"
-                app:layout_constraintStart_toEndOf="@id/topic_list_item_date"
-                app:layout_constraintTop_toTopOf="@id/topic_list_item_date" />
+            </LinearLayout>
 
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/divider"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                app:dividerColor="@color/about_primary_color5" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/topic_list_item_think_count"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/background_topic_item_count"
-                android:minWidth="0dp"
-                android:paddingVertical="5dp"
+            <LinearLayout
+                android:id="@+id/layout_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="20" />
+                app:layout_constraintStart_toEndOf="@id/divider"
+                app:layout_constraintTop_toTopOf="parent">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/topic_list_item_date_prefix"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_date_prefix"
+                        android:textColor="@color/about_grey6"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/topic_list_item_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="4dp"
+                        android:text="82"
+                        android:textColor="@color/about_grey6"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/topic_list_item_date_suffix"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_date_suffix"
+                        android:textColor="@color/about_grey6"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/topic_list_item_topic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="나의 습관들"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="normal" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 

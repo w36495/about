@@ -12,7 +12,6 @@ class ThinkListViewHolder(
     var onClickItem: ((ThinkListViewHolder) -> Unit)? = null
 
     fun bind(think: Think) {
-        binding.thinkListItemNumber.text = (adapterPosition + 1).toString()
         binding.thinkListItemText.text = think.think
 
         binding.thinkListItemDeleteContainer.setOnClickListener {
