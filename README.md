@@ -62,7 +62,7 @@ https://play.google.com/store/apps/details?id=com.w36495.about
   ![버그_생각개수](https://github.com/w36495/about/assets/52291662/ba11c323-63cf-4e5d-8902-3010aeb8e741)
 
   - '취미' 목록의 생각 개수와 '독서' 목록의 생각 개수가 일치함 (데이터베이스에는 일치하지 않음) 
-- 해결 방법 [(링크)](https://w36495.tistory.com/99)
+- 해결 방법 [(링크)](https://stackoverflow.com/questions/77133782/how-can-i-get-different-data-combined-in-flow-in-android)
   - 데이터베이스의 topics 테이블과 thinks 테이블을 조인하여 select query 문 적용
   ``` SQL
   SELECT topics.id, topics.topic, COUNT(topicId) AS countOfThink, topics.registDate, topics.updateDate
